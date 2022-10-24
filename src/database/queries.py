@@ -1,6 +1,6 @@
 
 def get_tables_list_query():
-	"""
+    """
     --------------------
     Description
     --------------------
@@ -23,12 +23,12 @@ def get_tables_list_query():
     --------------------
     => To be filled by student
     -> (type): description
-
     """
-	=> To be filled by student
+    query = "SELECT table_schema, table_name FROM information_schema.tables;"
+    return query
 
 def get_table_data_query(schema_name, table_name):
-	"""
+    """
     --------------------
     Description
     --------------------
@@ -51,13 +51,14 @@ def get_table_data_query(schema_name, table_name):
     --------------------
     => To be filled by student
     -> (type): description
-
     """
-	=> To be filled by student
+	#=> To be filled by student
+    query = f"SELECT * FROM {schema_name}.{table_name}"
+    return query
 
 
 def get_table_schema_query(schema_name, table_name):
-	"""
+    """
     --------------------
     Description
     --------------------
@@ -80,6 +81,7 @@ def get_table_schema_query(schema_name, table_name):
     --------------------
     => To be filled by student
     -> (type): description
-
     """
-	=> To be filled by student
+	#=> To be filled by student
+    query = f"SELECT * FROM information_schema.columns WHERE table_schema = '{schema_name}' AND table_name = '{table_name}';"
+    return query

@@ -24,7 +24,13 @@ class PostgresConnector:
     -> excluded_schemas (list): List containing the names of internal Postgres schemas to be excluded from selection (information_schema, pg_catalog)
     """
     def __init__(self, database="postgres", user='postgres', password='password', host='127.0.0.1', port='5432'):
-        => To be filled by student
+        #=> To be filled by student
+        self.database = database
+        self.user = user
+        self.password = password
+        self.host = host
+        self.port = port
+        self.excluded_schemas = ['information_schema', 'pg_catalog']
     
     def open_connection(self):
         """
@@ -52,7 +58,16 @@ class PostgresConnector:
         -> (type): description
 
         """
-        => To be filled by student
+        #=> To be filled by student
+        try:
+            self.conn = psycopg2.connect(
+            user=self.user,
+            password=self.password,
+            host=self.host,
+            port=self.port,
+            database=self.database)
+        except OperationalError:
+            print(OperationalError)
 
     def close_connection(self):
         """
@@ -80,7 +95,8 @@ class PostgresConnector:
         -> (type): description
 
         """
-        => To be filled by student
+        #=> To be filled by student
+        self.conn.close()
 
     def open_cursor(self):
         """
@@ -108,7 +124,9 @@ class PostgresConnector:
         -> (type): description
 
         """
-        => To be filled by student
+        #=> To be filled by student
+        self.cursor = self.conn.cursor()
+
         
     def close_cursor(self):
         """
@@ -136,7 +154,8 @@ class PostgresConnector:
         -> (type): description
 
         """
-        => To be filled by student
+        #=> To be filled by student
+        self.cursor.close()
 
     def run_query(self, sql_query):
         """
@@ -164,7 +183,11 @@ class PostgresConnector:
         -> (type): description
 
         """
-        => To be filled by student
+        #=> To be filled by student
+        self.cursor.execute(sql_query)
+        query_result = self.cursor.fetchall()
+        query_result_df = pd.DataFrame(query_result)
+        return query_result_df
         
     def list_tables(self):
         """
@@ -192,7 +215,17 @@ class PostgresConnector:
         -> (type): description
 
         """
-        => To be filled by student
+        #=> To be filled by student
+        sql_query = get_tables_list_query()
+        self.cursor.execute(sql_query)
+        query_result = self.cursor.fetchall()
+        list_tables = []
+        for tuples in query_result:
+            for i in range(len(tuples)):
+                if tuples[i] not in self.excluded_schemas and i == 0:
+                    i = i + 1
+                    list_tables.append(tuples[i])
+        return list_tables
 
     def load_table(self, schema_name, table_name):
         """
@@ -220,7 +253,11 @@ class PostgresConnector:
         -> (type): description
 
         """
-        => To be filled by student
+        #=> To be filled by student
+        sql_query = get_table_data_query(schema_name=schema_name, table_name=table_name)
+        self.cursor.execute(sql_query)
+        query_result = self.cursor.fetchall()
+        return query_result
 
     def get_table_schema(self, schema_name, table_name):
         """
@@ -246,6 +283,9 @@ class PostgresConnector:
         --------------------
         => To be filled by student
         -> (type): description
-
         """
-        => To be filled by student
+        # => To be filled by student
+        sql_query = get_table_schema_query(schema_name=schema_name, table_name=table_name)
+        self.cursor.execute(sql_query)
+        query_result = self.cursor.fetchall()
+        return query_result
