@@ -29,7 +29,8 @@ def display_db_connection_menu():
     -> (type): description
 
     """
-    => To be filled by student
+    st.title('Database')
+    menu = ['Username:', 'Password:', 'Database Host:', 'Database Name:', 'Database Port:']
 
 def connect_db():
     """

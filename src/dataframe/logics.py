@@ -66,6 +66,12 @@ class Dataset:
         -> (type): description
 
         """
+        self.db.open_connection()
+        self.db.open_cursor()
+        self.df = self.db.load_table(self.schema_name, self.table_name)
+        self.db.close_cursor()
+        self.db.close_connection()
+
         self.set_numeric_columns()
         self.set_text_columns()
         self.set_date_columns()
@@ -218,9 +224,9 @@ class Dataset:
         self.db.open_cursor()
         self.num_cols = list(self.db.run_query(get_numeric_tables_query())[0])
         for column in self.num_cols:
-            query = f'select {column} from {self.table_name}'
-            data = self.db.run_query(query)
-            self.df[column] = list(data[0])
+            for col in self.df.columns:
+                if (col == column):
+                    self.df[col] = pd.to_numeric(self.df[col])
         self.db.close_cursor()
         self.db.close_connection()
 
@@ -255,9 +261,9 @@ class Dataset:
         self.db.open_cursor()
         self.text_cols = list(self.db.run_query(get_text_tables_query())[0])
         for column in self.text_cols:
-            query = f'select {column} from {self.table_name}'
-            data = self.db.run_query(query)
-            self.df[column] = list(data[0])
+            for col in self.df.columns:
+                if (col == column):
+                    self.df[col] = self.df[col].astype(str)
         self.db.close_cursor()
         self.db.close_connection()
 
@@ -292,9 +298,9 @@ class Dataset:
         self.db.open_cursor()
         self.date_cols = list(self.db.run_query(get_date_tables_query())[0])
         for column in self.date_cols:
-            query = f'select {column} from {self.table_name}'
-            data = self.db.run_query(query)
-            self.df[column] = list(data[0])
+            for col in self.df.columns:
+                if (col == column):
+                    self.df[col] = pd.to_datetime(self.df[col])
         self.db.close_cursor()
         self.db.close_connection()
 
@@ -411,3 +417,7 @@ class Dataset:
         summary = pd.DataFrame()
         summary['Description'] = ['Name of Table', 'Number of Rows', 'Number of Columns', 'Number of Duplicated Rows', 'Number of Rows with Missing Values']
         summary['Value'] = [self.table_name, self.n_rows, self.n_cols, self.n_duplicates, self.n_missing]
+        return summary
+
+        def get_schema(self):
+            return self.df.get_table_schema(self.schema_name, self.table_name)

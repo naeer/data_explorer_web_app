@@ -1,8 +1,9 @@
 import streamlit as st
 
+from src.database.logics import
 from src.dataframe.logics import Dataset
 
-def read_data():
+def read_data(schema_name, table_name):
     """
     --------------------
     Description
@@ -28,9 +29,11 @@ def read_data():
     -> (type): description
 
     """
-    => To be filled by student
+    Dataset = Dataset(schema_name, table_name)
+    Dataset.set_data()
+    return Dataset.get_summary_df(), Dataset.get_schema()
 
-def display_overall():
+def display_overall(schema_name, table_name):
     """
     --------------------
     Description
@@ -56,7 +59,8 @@ def display_overall():
     -> (type): description
 
     """
-    => To be filled by student
+    st.table(data=self.read_data(schema_name, table_name)[0])
+    st.dataframe(data=self.read_data(schema_name, table_name)[1])
 
 def display_dataframes():
     """
@@ -84,4 +88,4 @@ def display_dataframes():
     -> (type): description
 
     """
-    => To be filled by student
+    data = self.read_data(schema_name, table_name)[0]

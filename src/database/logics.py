@@ -24,8 +24,21 @@ class PostgresConnector:
     -> excluded_schemas (list): List containing the names of internal Postgres schemas to be excluded from selection (information_schema, pg_catalog)
     """
     def __init__(self, database="postgres", user='postgres', password='password', host='127.0.0.1', port='5432'):
-        => To be filled by student
-    
+        self.database = database
+        self.user = user
+        self.password = password
+        self.host = host
+        self.port = port
+        self.conn = psycopg2.connect(
+            user = self.user,
+            pssword = self.password,
+            host = self.host,
+            port = self.port,
+            database = self.database
+        )
+        self.cursor = self.conn.cursor()
+
+
     def open_connection(self):
         """
         --------------------
@@ -52,7 +65,7 @@ class PostgresConnector:
         -> (type): description
 
         """
-        => To be filled by student
+        connection = self.conn
 
     def close_connection(self):
         """
@@ -80,14 +93,14 @@ class PostgresConnector:
         -> (type): description
 
         """
-        => To be filled by student
+        connection.close()
 
     def open_cursor(self):
         """
         --------------------
         Description
         --------------------
-        -> open_cursor (method): Class method that creates an active cursor to a Postgres database 
+        -> open_cursor (method): Class method that creates an active cursor to a Postgres database
 
         --------------------
         Parameters
@@ -108,14 +121,14 @@ class PostgresConnector:
         -> (type): description
 
         """
-        => To be filled by student
-        
+        cursor = self.cursor
+
     def close_cursor(self):
         """
         --------------------
         Description
         --------------------
-        -> close_cursor (method): Class method that closes an active cursor to a Postgres database 
+        -> close_cursor (method): Class method that closes an active cursor to a Postgres database
 
         --------------------
         Parameters
@@ -136,7 +149,7 @@ class PostgresConnector:
         -> (type): description
 
         """
-        => To be filled by student
+        cursor.close()
 
     def run_query(self, sql_query):
         """
@@ -164,8 +177,9 @@ class PostgresConnector:
         -> (type): description
 
         """
-        => To be filled by student
-        
+        cursor.execute(sql_query)
+        return pd.DataFrame(cursor.fetchall())
+
     def list_tables(self):
         """
         --------------------
@@ -192,7 +206,9 @@ class PostgresConnector:
         -> (type): description
 
         """
-        => To be filled by student
+        query = get_tables_list_query()
+        cursor.execute(query)
+        return cursor.fetchall()
 
     def load_table(self, schema_name, table_name):
         """
@@ -220,7 +236,10 @@ class PostgresConnector:
         -> (type): description
 
         """
-        => To be filled by student
+        query = get_table_data_query(schema_name, table_name)
+        cursor.execute(query)
+        df = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
+        return df
 
     def get_table_schema(self, schema_name, table_name):
         """
@@ -248,4 +267,7 @@ class PostgresConnector:
         -> (type): description
 
         """
-        => To be filled by student
+        query = get_table_schema_query(schema_name, table_name)
+        cursor.execute(query)
+        df = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
+        return df
