@@ -53,7 +53,7 @@ def get_text_tables_query(schema_name, table_name):
     -> (type): description
 
     """
-    query = f"select column_name from information_schema.columns where table_schema = '{schema_name}' and table_name = '{table_name}' and data_type in ('character varying', 'character', 'text', '"char"', 'name', 'bytea')"
+    query = f"select column_name from information_schema.columns where table_schema = '{schema_name}' and table_name = '{table_name}' and data_type in ('character varying', 'character', 'text', 'char', 'name', 'bytea')"
     return query
 
 def get_date_tables_query(schema_name, table_name):

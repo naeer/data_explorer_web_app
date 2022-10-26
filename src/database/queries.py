@@ -25,7 +25,7 @@ def get_tables_list_query():
     -> (type): description
 
     """
-	query = "select table_name from information_schma.tables where table_schma = 'public'"
+	query = "select table_name from information_schema.tables where table_schema = 'public'"
 	return query
 
 

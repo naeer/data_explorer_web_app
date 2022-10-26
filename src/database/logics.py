@@ -29,15 +29,6 @@ class PostgresConnector:
         self.password = password
         self.host = host
         self.port = port
-        self.conn = psycopg2.connect(
-            user = self.user,
-            pssword = self.password,
-            host = self.host,
-            port = self.port,
-            database = self.database
-        )
-        self.cursor = self.conn.cursor()
-
 
     def open_connection(self):
         """
@@ -65,7 +56,13 @@ class PostgresConnector:
         -> (type): description
 
         """
-        connection = self.conn
+        self.conn = psycopg2.connect(
+            user = self.user,
+            password = self.password,
+            host = self.host,
+            port = self.port,
+            database = self.database
+        )
 
     def close_connection(self):
         """
@@ -93,7 +90,7 @@ class PostgresConnector:
         -> (type): description
 
         """
-        connection.close()
+        self.conn.close()
 
     def open_cursor(self):
         """
@@ -121,7 +118,7 @@ class PostgresConnector:
         -> (type): description
 
         """
-        cursor = self.cursor
+        self.cursor = self.conn.cursor()
 
     def close_cursor(self):
         """
@@ -149,7 +146,7 @@ class PostgresConnector:
         -> (type): description
 
         """
-        cursor.close()
+        self.cursor.close()
 
     def run_query(self, sql_query):
         """
@@ -177,8 +174,8 @@ class PostgresConnector:
         -> (type): description
 
         """
-        cursor.execute(sql_query)
-        return pd.DataFrame(cursor.fetchall())
+        self.cursor.execute(sql_query)
+        return pd.DataFrame(self.cursor.fetchall())
 
     def list_tables(self):
         """
@@ -207,8 +204,8 @@ class PostgresConnector:
 
         """
         query = get_tables_list_query()
-        cursor.execute(query)
-        return cursor.fetchall()
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
 
     def load_table(self, schema_name, table_name):
         """
@@ -237,8 +234,8 @@ class PostgresConnector:
 
         """
         query = get_table_data_query(schema_name, table_name)
-        cursor.execute(query)
-        df = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
+        self.cursor.execute(query)
+        df = pd.DataFrame(self.cursor.fetchall(), columns=[desc[0] for desc in self.cursor.description])
         return df
 
     def get_table_schema(self, schema_name, table_name):
@@ -268,6 +265,6 @@ class PostgresConnector:
 
         """
         query = get_table_schema_query(schema_name, table_name)
-        cursor.execute(query)
-        df = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
+        self.cursor.execute(query)
+        df = pd.DataFrame(self.cursor.fetchall(), columns=[desc[0] for desc in self.cursor.description])
         return df

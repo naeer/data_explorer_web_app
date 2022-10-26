@@ -1,6 +1,5 @@
 import streamlit as st
 
-from src.database.logics import
 from src.dataframe.logics import Dataset
 
 def read_data(schema_name, table_name):
@@ -29,9 +28,9 @@ def read_data(schema_name, table_name):
     -> (type): description
 
     """
-    Dataset = Dataset(schema_name, table_name)
-    Dataset.set_data()
-    return Dataset.get_summary_df(), Dataset.get_schema()
+    Data = Dataset(schema_name, table_name)
+    Data.set_data()
+    return Data
 
 def display_overall(schema_name, table_name):
     """
@@ -59,8 +58,11 @@ def display_overall(schema_name, table_name):
     -> (type): description
 
     """
-    st.table(data=self.read_data(schema_name, table_name)[0])
-    st.dataframe(data=self.read_data(schema_name, table_name)[1])
+    Data = read_data(schema_name, table_name)
+    st.header('Overall Information')
+    st.table(data=Data.get_summary_df())
+    st.header('Table Schema')
+    st.dataframe(data=Data.get_schema())
 
 def display_dataframes():
     """
@@ -88,4 +90,15 @@ def display_dataframes():
     -> (type): description
 
     """
-    data = self.read_data(schema_name, table_name)[0]
+    Data = read_data(schema_name, table_name)
+    nrow = st.slider('Select the number of rows to be displayed', 5, 50)
+    logic = st.radio('Exploration Method', ('Head', 'Tail', 'Sample'))
+    if logic == 'Head':
+        st.header('Top Rows of Selected Table')
+        st.write(Data.get_head(nrow))
+    elif logic == 'Tail':
+        st.header('Bottom Rows of Selected Table')
+        st.write(Data.get_tail(nrow))
+    else:
+        st.header('Random Sample Rows of Selected Table')
+        st.write(Data.get_sample(nrow))
