@@ -9,20 +9,18 @@ def get_tables_list_query():
     --------------------
     Parameters
     --------------------
-    => To be filled by student
-    -> name (type): description
+    -> None
 
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
+    -> Set the query to extract the list of tables from a Postgres database in a variable called query
+    -> Return that variable
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
+    -> (str): Returns the query that is used to extract the list of tables from a Postgres database
     """
     query = "SELECT table_schema, table_name FROM information_schema.tables;"
     return query
@@ -37,22 +35,20 @@ def get_table_data_query(schema_name, table_name):
     --------------------
     Parameters
     --------------------
-    => To be filled by student
-    -> name (type): description
+    -> schema_name (str): Name of the schema on which the SQL query is going to be executed on
+    -> table_name (str): Name of the table (in the schema) on which the SQL query is going to be executed on
 
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
+    -> Set the query to extract the content of a Postgres table in a variable called query
+    -> Return that variable
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
+    -> (str): Returns the query that is used to extract the content of a Postgres table
     """
-	#=> To be filled by student
     query = f"SELECT * FROM {schema_name}.{table_name}"
     return query
 
@@ -67,21 +63,23 @@ def get_table_schema_query(schema_name, table_name):
     --------------------
     Parameters
     --------------------
-    => To be filled by student
-    -> name (type): description
+    -> schema_name (str): Name of the schema on which the SQL query is going to be executed on
+    -> table_name (str): Name of the table (in the schema) on which the SQL query is going to be executed on
 
     --------------------
     Pseudo-Code
     --------------------
     => To be filled by student
     -> pseudo-code
+    -> Set the query to extract a list of columns and their information from a Postgres table in a variable called query
+    -> Return that variable
 
     --------------------
     Returns
     --------------------
     => To be filled by student
     -> (type): description
+    -> (str): Returns the query that is used to extract a list of columns and their information from a Postgres table
     """
-	#=> To be filled by student
     query = f"SELECT * FROM information_schema.columns WHERE table_schema = '{schema_name}' AND table_name = '{table_name}';"
     return query
