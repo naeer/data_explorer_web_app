@@ -43,24 +43,6 @@ class TextColumn:
         --------------------
         -> set_data (method): Class method that computes all requested information from self.serie to be displayed in the Text section of Streamlit app 
 
-        --------------------
-        Parameters
-        --------------------
-        => To be filled by student
-        -> name (type): description
-
-        --------------------
-        Pseudo-Code
-        --------------------
-        => To be filled by student
-        -> pseudo-code
-
-        --------------------
-        Returns
-        --------------------
-        => To be filled by student
-        -> (type): description
-
         """
         => To be filled by student
       
@@ -71,26 +53,9 @@ class TextColumn:
         --------------------
         -> is_serie_none (method): Class method that checks if self.serie is empty or none 
 
-        --------------------
-        Parameters
-        --------------------
-        => To be filled by student
-        -> name (type): description
-
-        --------------------
-        Pseudo-Code
-        --------------------
-        => To be filled by student
-        -> pseudo-code
-
-        --------------------
-        Returns
-        --------------------
-        => To be filled by student
-        -> (type): description
-
         """
-        => To be filled by student
+        query = SELECT count(*) FROM schema_name.table_name where col_name = '';
+        return query
 
     def set_unique(self):
         """
@@ -99,26 +64,9 @@ class TextColumn:
         --------------------
         -> set_unique (method): Class method that computes the number of unique value of a serie
 
-        --------------------
-        Parameters
-        --------------------
-        => To be filled by student
-        -> name (type): description
-
-        --------------------
-        Pseudo-Code
-        --------------------
-        => To be filled by student
-        -> pseudo-code
-
-        --------------------
-        Returns
-        --------------------
-        => To be filled by student
-        -> (type): description
-
         """
-        => To be filled by student
+        query = SELECT COUNT(DISTINCT( col_name )) FROM schema_name.table_name ;
+        return query
 
     def set_missing(self):
         """
@@ -127,26 +75,9 @@ class TextColumn:
         --------------------
         -> set_missing (method): Class method that computes the number of missing value of a serie using a SQL query (get_missing_query())
 
-        --------------------
-        Parameters
-        --------------------
-        => To be filled by student
-        -> name (type): description
-
-        --------------------
-        Pseudo-Code
-        --------------------
-        => To be filled by student
-        -> pseudo-code
-
-        --------------------
-        Returns
-        --------------------
-        => To be filled by student
-        -> (type): description
-
         """
-        => To be filled by student
+        query = SELECT count(*) FROM schema_name.table_name where col_name is NULL ;
+        return query
 
     def set_empty(self):
         """
@@ -155,26 +86,9 @@ class TextColumn:
         --------------------
         -> set_empty (method): Class method that computes the number of times a serie has empty value
 
-        --------------------
-        Parameters
-        --------------------
-        => To be filled by student
-        -> name (type): description
-
-        --------------------
-        Pseudo-Code
-        --------------------
-        => To be filled by student
-        -> pseudo-code
-
-        --------------------
-        Returns
-        --------------------
-        => To be filled by student
-        -> (type): description
-
         """
-        => To be filled by student
+        query = SELECT count(*) FROM schema_name.table_name where col_name = '';
+        return query
 
     def set_mode(self):
         """
