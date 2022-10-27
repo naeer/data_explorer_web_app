@@ -3,7 +3,7 @@ import pandas as pd
 import altair as alt
 
 from src.database.logics import PostgresConnector
-from src.serie_date.queries import get_column_query, get_min_date_query, get_max_date_query, get_weekend_count_query, get_weekday_count_query, get_future_count_query, get_1900_count_query, get_1970_count_query
+from src.serie_date.queries import get_min_date_query, get_weekend_count_query, get_1900_count_query
 
 class DateColumn:
     """
@@ -34,29 +34,14 @@ class DateColumn:
 
     """
     def __init__(self, schema_name=None, table_name=None, col_name=None, db=None, serie=None):
-        self.schema_name = schema_name
-        self.table_name = table_name
-        self.col_name = col_name
-        self.db = PostgresConnector()
-        self.serie = pd.Series()
-        self.n_unique = None
-        self.n_missing = None
-        self.col_min = None
-        self.col_max = None
-        self.n_weekend = None
-        self.n_weekday = None
-        self.n_future = None
-        self.n_empty_1900 = None
-        self.n_empty_1970 = None
-        self.barchart = None
-        self.frequent = None
+        => To be filled by student
 
     def set_data(self):
         """
         --------------------
         Description
         --------------------
-        -> set_data (method): Class method that computes all requested information from self.serie to be displayed in the Date section of Streamlit app
+        -> set_data (method): Class method that computes all requested information from self.serie to be displayed in the Date section of Streamlit app 
 
         --------------------
         Parameters
@@ -77,31 +62,14 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
-        self.db.open_cursor()
-        self.serie = self.db.run_query(get_column_query(self.schema_name, self.table_name, self.col_name))[0].squeeze()
-        self.db.close_cursor()
-        self.db.close_connection()
-
-        self.is_serie_none()
-        self.set_unique()
-        self.set_missing()
-        self.set_min()
-        self.set_max()
-        self.set_weekend()
-        self.set_weekday()
-        self.set_future()
-        self.set_empty_1900()
-        self.set_empty_1970()
-        self.set_barchart()
-        self.set_frequent()
+        => To be filled by student
 
     def is_serie_none(self):
         """
         --------------------
         Description
         --------------------
-        -> is_serie_none (method): Class method that checks if self.serie is empty or none
+        -> is_serie_none (method): Class method that checks if self.serie is empty or none 
 
         --------------------
         Parameters
@@ -122,7 +90,7 @@ class DateColumn:
         -> (type): description
 
         """
-        return (self.serie == None) | self.serie.empty
+        => To be filled by student
 
     def set_unique(self):
         """
@@ -150,7 +118,7 @@ class DateColumn:
         -> (type): description
 
         """
-        self.n_unique = self.serie.nunique()
+        => To be filled by student
 
     def set_missing(self):
         """
@@ -178,7 +146,7 @@ class DateColumn:
         -> (type): description
 
         """
-        self.n_missing = self.serie.isna().sum()
+        => To be filled by student
 
     def set_min(self):
         """
@@ -206,11 +174,7 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
-        self.db.open_cursor()
-        self.col_min = self.db.run_query(get_min_date_query(self.schema_name, self.table_name, self.col_name))[0][0]
-        self.db.close_cursor()
-        self.db.close_connection()
+        => To be filled by student
 
     def set_max(self):
         """
@@ -238,11 +202,7 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
-        self.db.open_cursor()
-        self.col_max = self.db.run_query(get_max_date_query(self.schema_name, self.table_name, self.col_name))[0][0]
-        self.db.close_cursor()
-        self.db.close_connection()
+        => To be filled by student
 
     def set_weekend(self):
         """
@@ -270,11 +230,7 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
-        self.db.open_cursor()
-        self.n_weekend = self.db.run_query(get_weekend_count_query(self.schema_name, self.table_name, self.col_name))[0][0]
-        self.db.close_cursor()
-        self.db.close_connection()
+        => To be filled by student
 
     def set_weekday(self):
         """
@@ -302,11 +258,7 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
-        self.db.open_cursor()
-        self.n_weekday = self.db.run_query(get_weekday_count_query(self.schema_name, self.table_name, self.col_name))[0][0]
-        self.db.close_cursor()
-        self.db.close_connection()
+        => To be filled by student
 
     def set_future(self):
         """
@@ -334,11 +286,7 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
-        self.db.open_cursor()
-        self.n_future = self.db.run_query(get_future_count_query(self.schema_name, self.table_name, self.col_name))[0][0]
-        self.db.close_cursor()
-        self.db.close_connection()
+        => To be filled by student
 
     def set_empty_1900(self):
         """
@@ -366,11 +314,7 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
-        self.db.open_cursor()
-        self.n_empty_1900 = self.db.run_query(get_1900_count_query(self.schema_name, self.table_name, self.col_name))[0][0]
-        self.db.close_cursor()
-        self.db.close_connection()
+        => To be filled by student
 
     def set_empty_1970(self):
         """
@@ -398,13 +342,9 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
-        self.db.open_cursor()
-        self.n_empty_1970 = self.db.run_query(get_1970_count_query(self.schema_name, self.table_name, self.col_name))[0][0]
-        self.db.close_cursor()
-        self.db.close_connection()
+        => To be filled by student
 
-    def set_barchart(self):
+    def set_barchart(self):  
         """
         --------------------
         Description
@@ -430,17 +370,8 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
-        self.db.open_cursor()
-        counts = self.serie.value_counts().to_frame()
-        value_c = pd.DataFrame()
-        value_c['value'] = pd.to_datetime(counts.index)
-        value_c['occurrence'] = counts.values
-        self.barchart = alt.Chart(value_c).mark_bar().encode(x='value', y='occurrence')
-        self.db.close_cursor()
-        self.db.close_connection()
-
-
+        => To be filled by student
+      
     def set_frequent(self, end=20):
         """
         --------------------
@@ -467,17 +398,7 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
-        self.db.open_cursor()
-        counts = self.serie.value_counts().to_frame()
-        counts_perc = round(self.serie.value_counts(normalize=True).to_frame(), 4)
-        value_c = pd.DataFrame()
-        value_c['value'] = pd.to_datetime(counts.index)
-        value_c['occurrence'] = counts.values
-        value_c['percentage'] = counts_perc.values
-        self.frequent = value_c
-        self.db.close_cursor()
-        self.db.close_connection()
+        => To be filled by student
 
     def get_summary_df(self):
         """
@@ -505,7 +426,4 @@ class DateColumn:
         -> (type): description
 
         """
-        summary = pd.DataFrame()
-        summary['Description'] = ['Number of Unique Values', 'Number of Rows with Missing Values', 'Number of Weekend Dates', 'Number of Weekday Dates', 'Number of Dates in Future', 'Number of Rows with 1900-01-01', 'Number of Rows with 1970-01-01', 'Minimum Value', 'Maximum Value']
-        summary['Value'] = [self.n_unique, self.n_missing, self.n_weekend, self.n_weekday, self.n_future, self.n_empty_1900, self.n_empty_1970, self.col_min, self.col_max]
-        return summary
+        => To be filled by student

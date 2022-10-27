@@ -2,7 +2,7 @@ import streamlit as st
 
 from src.dataframe.logics import Dataset
 
-def read_data(schema_name, table_name):
+def read_data():
     """
     --------------------
     Description
@@ -28,11 +28,9 @@ def read_data(schema_name, table_name):
     -> (type): description
 
     """
-    Data = Dataset(schema_name, table_name)
-    Data.set_data()
-    return Data
+    => To be filled by student
 
-def display_overall(schema_name, table_name):
+def display_overall():
     """
     --------------------
     Description
@@ -58,11 +56,7 @@ def display_overall(schema_name, table_name):
     -> (type): description
 
     """
-    Data = read_data(schema_name, table_name)
-    st.header('Overall Information')
-    st.table(data=Data.get_summary_df())
-    st.header('Table Schema')
-    st.dataframe(data=Data.get_schema())
+    => To be filled by student
 
 def display_dataframes():
     """
@@ -90,15 +84,4 @@ def display_dataframes():
     -> (type): description
 
     """
-    Data = read_data(schema_name, table_name)
-    nrow = st.slider('Select the number of rows to be displayed', 5, 50)
-    logic = st.radio('Exploration Method', ('Head', 'Tail', 'Sample'))
-    if logic == 'Head':
-        st.header('Top Rows of Selected Table')
-        st.write(Data.get_head(nrow))
-    elif logic == 'Tail':
-        st.header('Bottom Rows of Selected Table')
-        st.write(Data.get_tail(nrow))
-    else:
-        st.header('Random Sample Rows of Selected Table')
-        st.write(Data.get_sample(nrow))
+    => To be filled by student
