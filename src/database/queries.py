@@ -25,7 +25,9 @@ def get_tables_list_query():
     -> (type): description
 
     """
-	=> To be filled by student
+	query = "select table_name from information_schema.tables where table_schema = 'public'"
+	return query
+
 
 def get_table_data_query(schema_name, table_name):
 	"""
@@ -53,7 +55,8 @@ def get_table_data_query(schema_name, table_name):
     -> (type): description
 
     """
-	=> To be filled by student
+	query = f'select * from {schema_name}.{table_name}'
+	return query
 
 
 def get_table_schema_query(schema_name, table_name):
@@ -82,4 +85,6 @@ def get_table_schema_query(schema_name, table_name):
     -> (type): description
 
     """
-	=> To be filled by student
+	query = f"SELECT c.table_name, c.column_name, c.data_type, CASE WHEN EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.constraint_column_usage k WHERE c.table_name = k.table_name and k.column_name = c.column_name) THEN true ELSE false END as primary_key, c.is_nullable, c.character_maximum_length, c.numeric_precision FROM INFORMATION_SCHEMA.COLUMNS c WHERE c.table_name='employees'"
+	#query = f'select column_name, data_type from information_schema.columns where table_schema = {schema_name} and table_name = {table_name}'
+	return query
