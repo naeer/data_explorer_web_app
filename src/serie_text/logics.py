@@ -3,7 +3,7 @@ import pandas as pd
 import altair as alt
 
 from src.database.logics import PostgresConnector
-from src.serie_text.queries import get_missing_query, get_mode_query, get_alpha_query
+from src.serie_text.queries import get_missing_query, get_mode_query, get_alpha_query, get_whitespace, get_lowercase, get_uppercase, get_digit
 
 class TextColumn:
     """
