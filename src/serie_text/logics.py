@@ -34,7 +34,21 @@ class TextColumn:
 
     """
     def __init__(self, schema_name=None, table_name=None, col_name=None, db=None, serie=None):
-        => To be filled by student
+        self.schema_name = schema_name
+        self.table_name = table_name
+        self.col_name = col_name
+        self.db = PostgresConnector()
+        self.serie = pd.Series()
+        self.n_unique = None
+        self.n_empty = None
+        self.n_missing = None
+        self.n_space = None
+        self.n_lower = None
+        self.n_upper = None
+        self.n_alpha = None
+        self.n_digit = None
+        self.barchart = None
+        self.frequent = None
     
     def set_data(self):
         """
@@ -42,9 +56,27 @@ class TextColumn:
         Description
         --------------------
         -> set_data (method): Class method that computes all requested information from self.serie to be displayed in the Text section of Streamlit app 
-
         """
-        => To be filled by student
+
+        self.db.open_connection()
+        self.db.open_cursor()
+        self.serie = self.db.run_query(get_column_query(self.schema_name, self.table_name, self.col_name))[0].squeeze()
+        self.db.close_cursor()
+        self.db.close_connection()
+
+        self.is_serie_none()
+        self.set_unique()
+        self.set_missing()
+        self.set_empty()
+        self.set_mode()
+        self.set_whitespace()
+        self.set_lowercase()
+        self.set_uppercase()
+        self.set_alphabet()
+        self.set_digit()
+        self.set_barchart()
+        self.set_frequent()
+        self.get_summary_df()
       
     def is_serie_none(self):
         """
@@ -54,8 +86,7 @@ class TextColumn:
         -> is_serie_none (method): Class method that checks if self.serie is empty or none 
 
         """
-        query = SELECT count(*) FROM schema_name.table_name where col_name = '';
-        return query
+        return (self.serie == None) | self.serie.empty
 
     def set_unique(self):
         """
@@ -65,8 +96,7 @@ class TextColumn:
         -> set_unique (method): Class method that computes the number of unique value of a serie
 
         """
-        query = SELECT COUNT(DISTINCT( col_name )) FROM schema_name.table_name ;
-        return query
+        self.n_unique = self.serie.nunique()
 
     def set_missing(self):
         """
@@ -76,8 +106,12 @@ class TextColumn:
         -> set_missing (method): Class method that computes the number of missing value of a serie using a SQL query (get_missing_query())
 
         """
-        query = SELECT count(*) FROM schema_name.table_name where col_name is NULL ;
-        return query
+        self.db.open_connection()
+        self.db.open_cursor()
+        self.n_missing = self.db.run_query(get_missing_query(self.schema_name, self.table_name, self.col_name))[0][0]
+        self.db.close_cursor()
+        self.db.close_connection()
+
 
     def set_empty(self):
         """
@@ -87,8 +121,7 @@ class TextColumn:
         -> set_empty (method): Class method that computes the number of times a serie has empty value
 
         """
-        query = SELECT count(*) FROM schema_name.table_name where col_name = '';
-        return query
+        self.n_empty = self.serie.empty()
 
     def set_mode(self):
         """
@@ -97,26 +130,13 @@ class TextColumn:
         --------------------
         -> set_mode (method): Class method that computes the mode value of a serie using a SQL query (get_mode_query())
 
-        --------------------
-        Parameters
-        --------------------
-        => To be filled by student
-        -> name (type): description
-
-        --------------------
-        Pseudo-Code
-        --------------------
-        => To be filled by student
-        -> pseudo-code
-
-        --------------------
-        Returns
-        --------------------
-        => To be filled by student
-        -> (type): description
-
         """
-        => To be filled by student
+        self.db.open_connection()
+        self.db.open_cursor()
+        self.n_mode = self.db.run_query(get_mode_query(self.schema_name, self.table_name, self.col_name))[0][0]
+        self.db.close_cursor()
+        self.db.close_connection()
+
 
     def set_whitespace(self):
         """
@@ -125,26 +145,12 @@ class TextColumn:
         --------------------
         -> set_whitespace (method): Class method that computes the number of times a serie has only space characters
 
-        --------------------
-        Parameters
-        --------------------
-        => To be filled by student
-        -> name (type): description
-
-        --------------------
-        Pseudo-Code
-        --------------------
-        => To be filled by student
-        -> pseudo-code
-
-        --------------------
-        Returns
-        --------------------
-        => To be filled by student
-        -> (type): description
-
         """
-        => To be filled by student
+        self.db.open_connection()
+        self.db.open_cursor()
+        self.n_whitespace = self.db.run_query(get_whitespace(self.schema_name, self.table_name, self.col_name))[0][0]
+        self.db.close_cursor()
+        self.db.close_connection()
 
     def set_lowercase(self):
         """
@@ -153,26 +159,12 @@ class TextColumn:
         --------------------
         -> set_lowercase (method): Class method that computes the number of times a serie has only lowercase characters
 
-        --------------------
-        Parameters
-        --------------------
-        => To be filled by student
-        -> name (type): description
-
-        --------------------
-        Pseudo-Code
-        --------------------
-        => To be filled by student
-        -> pseudo-code
-
-        --------------------
-        Returns
-        --------------------
-        => To be filled by student
-        -> (type): description
-
         """
-        => To be filled by student
+        self.db.open_connection()
+        self.db.open_cursor()
+        self.n_lowercase = self.db.run_query(get_lowercase(self.schema_name, self.table_name, self.col_name))[0][0]
+        self.db.close_cursor()
+        self.db.close_connection()
 
     def set_uppercase(self):
         """
@@ -181,26 +173,12 @@ class TextColumn:
         --------------------
         -> set_uppercase (method): Class method that computes the number of times a serie has only uppercase characters
 
-        --------------------
-        Parameters
-        --------------------
-        => To be filled by student
-        -> name (type): description
-
-        --------------------
-        Pseudo-Code
-        --------------------
-        => To be filled by student
-        -> pseudo-code
-
-        --------------------
-        Returns
-        --------------------
-        => To be filled by student
-        -> (type): description
-
         """
-        => To be filled by student
+        self.db.open_connection()
+        self.db.open_cursor()
+        self.n_uppercase = self.db.run_query(get_uppercase(self.schema_name, self.table_name, self.col_name))[0][0]
+        self.db.close_cursor()
+        self.db.close_connection()
     
     def set_alphabet(self):
         """
@@ -209,26 +187,12 @@ class TextColumn:
         --------------------
         -> set_alphabet (method): Class method that computes the number of times a serie has only alphabetical characters using a SQL query (get_alpha_query())
 
-        --------------------
-        Parameters
-        --------------------
-        => To be filled by student
-        -> name (type): description
-
-        --------------------
-        Pseudo-Code
-        --------------------
-        => To be filled by student
-        -> pseudo-code
-
-        --------------------
-        Returns
-        --------------------
-        => To be filled by student
-        -> (type): description
-
         """
-        => To be filled by student
+        self.db.open_connection()
+        self.db.open_cursor()
+        self.n_alphabet = self.db.run_query(get_alpha_query(self.schema_name, self.table_name, self.col_name))[0][0]
+        self.db.close_cursor()
+        self.db.close_connection()
 
     def set_digit(self):
         """
@@ -237,26 +201,12 @@ class TextColumn:
         --------------------
         -> set_digit (method): Class method that computes the number of times a serie has only digit characters
 
-        --------------------
-        Parameters
-        --------------------
-        => To be filled by student
-        -> name (type): description
-
-        --------------------
-        Pseudo-Code
-        --------------------
-        => To be filled by student
-        -> pseudo-code
-
-        --------------------
-        Returns
-        --------------------
-        => To be filled by student
-        -> (type): description
-
         """
-        => To be filled by student
+        self.db.open_connection()
+        self.db.open_cursor()
+        self.n_digit = self.db.run_query(get_digit(self.schema_name, self.table_name, self.col_name))[0][0]
+        self.db.close_cursor()
+        self.db.close_connection()
 
     def set_barchart(self):  
         """
@@ -265,26 +215,16 @@ class TextColumn:
         --------------------
         -> set_barchart (method): Class method that computes the Altair barchart displaying the count for each value of a serie
 
-        --------------------
-        Parameters
-        --------------------
-        => To be filled by student
-        -> name (type): description
-
-        --------------------
-        Pseudo-Code
-        --------------------
-        => To be filled by student
-        -> pseudo-code
-
-        --------------------
-        Returns
-        --------------------
-        => To be filled by student
-        -> (type): description
-
         """
-        => To be filled by student
+        self.db.open_connection()
+        self.db.open_cursor()
+        counts = self.serie.value_counts().to_frame()
+        value_c = pd.DataFrame()
+        value_c['value'] = pd.to_datetime(counts.index)
+        value_c['occurrence'] = counts.values
+        self.barchart = alt.Chart(value_c).mark_bar().encode(x='value', y='occurrence')
+        self.db.close_cursor()
+        self.db.close_connection()
       
     def set_frequent(self, end=20):
         """
@@ -293,26 +233,18 @@ class TextColumn:
         --------------------
         -> set_frequent (method): Class method that computes the Dataframe containing the most frequest value of a serie
 
-        --------------------
-        Parameters
-        --------------------
-        => To be filled by student
-        -> name (type): description
-
-        --------------------
-        Pseudo-Code
-        --------------------
-        => To be filled by student
-        -> pseudo-code
-
-        --------------------
-        Returns
-        --------------------
-        => To be filled by student
-        -> (type): description
-
         """
-        => To be filled by student
+        self.db.open_connection()
+        self.db.open_cursor()
+        counts = self.serie.value_counts().to_frame()
+        counts_perc = round(self.serie.value_counts(normalize=True).to_frame(), 4)
+        value_c = pd.DataFrame()
+        value_c['value'] = pd.to_datetime(counts.index)
+        value_c['occurrence'] = counts.values
+        value_c['percentage'] = counts_perc.values
+        self.frequent = value_c
+        self.db.close_cursor()
+        self.db.close_connection()
 
     def get_summary_df(self):
         """
@@ -321,23 +253,9 @@ class TextColumn:
         --------------------
         -> get_summary_df (method): Class method that formats all requested information from self.serie to be displayed in the Overall section of Streamlit app as a Pandas dataframe with 2 columns: Description and Value
 
-        --------------------
-        Parameters
-        --------------------
-        => To be filled by student
-        -> name (type): description
-
-        --------------------
-        Pseudo-Code
-        --------------------
-        => To be filled by student
-        -> pseudo-code
-
-        --------------------
-        Returns
-        --------------------
-        => To be filled by student
-        -> (type): description
-
         """
-        => To be filled by student
+
+        summary = pd.DataFrame()
+        summary['Description'] = ['Number of Unique Values', 'Number of Rows with Missing Values', 'Number of Empty values', 'Number of Whitespaces', 'Mode of Values','Number of lowercase', 'Number of uppercase', 'Number of Series with alphabetical characters', 'Number of Series with digit characters']
+        summary['Value'] = [self.n_unique, self.n_missing, self.n_empty, self.n_whitespace, self.n_mode, self.n_lowercase, self.n_uppercase, self.n_alphabet, self.n_digit]
+        return summary
