@@ -3,7 +3,7 @@ import streamlit as st
 from src.serie_text.logics import TextColumn
 from src.dataframe.logics import Dataset
 
-def display_texts(schema_name, table_name):
+def display_texts():
     """
     --------------------
     Description
@@ -33,7 +33,7 @@ def display_text(col_name):
     """
     schema_name = st.session_state['schema_selected']
     table_name = st.session_state['table_selected']
-    Data = DateColumn(schema_name, table_name, col_name, db=st.session_state['db'])
+    Data = TextColumn(schema_name, table_name, col_name, db=st.session_state['db'])
     Data.set_data()
     st.table(data=Data.get_summary_df())
     st.subheader('Bar Chart')
