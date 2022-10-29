@@ -26,7 +26,12 @@ def set_app_config():
     -> (type): description
 
     """
-    => To be filled by student
+    st.set_page_config(
+        page_title="Database Explorer",
+        page_icon="🧊",
+        layout="centered",
+        initial_sidebar_state="collapsed"
+    )
 
 def set_session_state(key, value):
     """
@@ -54,7 +59,12 @@ def set_session_state(key, value):
     -> (type): description
 
     """
-    => To be filled by student
+    #=> To be filled by student
+    if value is None:
+        if key not in st.session_state:
+            st.session_state[key] = value
+    else:
+        st.session_state[key] = value
 
 def set_session_states(keys, value=None):
     """
@@ -82,7 +92,13 @@ def set_session_states(keys, value=None):
     -> (type): description
 
     """
-    => To be filled by student
+    #=> To be filled by student
+    if value is None:
+        for key in keys:
+            set_session_state(key, value)
+    else:
+        for i in range(len(keys)):
+            set_session_state(key=keys[i], value=value[i])
 
 def display_session_state():
     """
@@ -110,7 +126,8 @@ def display_session_state():
     -> (type): description
 
     """
-    => To be filled by student
+    #=> To be filled by student
+    st.write(st.session_state)
 
 
 
