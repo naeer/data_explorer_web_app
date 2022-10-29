@@ -13,10 +13,6 @@ set_session_states(['db', 'db_host', 'db_name', 'db_port', 'db_user', 'db_pass',
 set_app_config()
 st.title("Database Explorer")
 
-# Add Debugger
-with st.expander("Streamlit Session State", expanded=False):
-    display_session_state()
-
 # Add Menu
 with st.expander("ℹ️ - Streamlit application for performing data exploration on a database", expanded=True):
     display_db_connection_menu()
@@ -37,3 +33,7 @@ if st.session_state.db_status:
             display_texts()
         with tab5:
             display_dates()
+
+# Add Debugger
+with st.expander("Streamlit Session State", expanded=False):
+    display_session_state()
