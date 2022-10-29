@@ -27,15 +27,25 @@ class Dataset:
     -> text_cols (list): List of columns of text type (optional)
     -> date_cols (list): List of columns of datetime type (optional)
     """
-    def __init__(self, schema_name=None, table_name=None, db=None, df=None):
-        => To be filled by student
+    def __init__(self, schema_name=None, table_name=None, db=PostgresConnector(), df=pd.DataFrame()):
+        self.schema_name = schema_name
+        self.table_name = table_name
+        self.db = db
+        self.df = df
+        self.n_rows = None
+        self.n_cols = None
+        self.n_duplicates = None
+        self.n_missing = None
+        self.num_cols = None
+        self.text_cols = None
+        self.date_cols = None
 
     def set_data(self):
         """
         --------------------
         Description
         --------------------
-        -> set_data (method): Class method that computes all requested information from self.df to be displayed in the Overall section of Streamlit app 
+        -> set_data (method): Class method that computes all requested information from self.df to be displayed in the Overall section of Streamlit app
 
         --------------------
         Parameters
@@ -56,14 +66,27 @@ class Dataset:
         -> (type): description
 
         """
-        => To be filled by student
-        
+        self.db.open_connection()
+        self.db.open_cursor()
+        self.df = self.db.load_table(self.schema_name, self.table_name)
+        self.db.close_cursor()
+        self.db.close_connection()
+
+        self.is_df_none()
+        self.set_dimensions()
+        self.set_duplicates()
+        self.set_missing()
+
+        self.set_numeric_columns()
+        self.set_text_columns()
+        self.set_date_columns()
+
     def is_df_none(self):
         """
         --------------------
         Description
         --------------------
-        -> is_df_none (method): Class method that checks if self.df is empty or none 
+        -> is_df_none (method): Class method that checks if self.df is empty or none
 
         --------------------
         Parameters
@@ -84,7 +107,7 @@ class Dataset:
         -> (type): description
 
         """
-        => To be filled by student
+        return (self.df == None) | self.df.empty
 
     def set_dimensions(self):
         """
@@ -112,7 +135,8 @@ class Dataset:
         -> (type): description
 
         """
-        => To be filled by student
+        self.n_rows = self.df.shape[0]
+        self.n_cols = self.df.shape[1]
 
     def set_duplicates(self):
         """
@@ -140,7 +164,7 @@ class Dataset:
         -> (type): description
 
         """
-        => To be filled by student
+        self.n_duplicates = self.df.duplicated().sum()
 
     def set_missing(self):
         """
@@ -168,7 +192,7 @@ class Dataset:
         -> (type): description
 
         """
-        => To be filled by student
+        self.n_missing = self.df.isna().sum().sum()
 
     def set_numeric_columns(self):
         """
@@ -197,7 +221,15 @@ class Dataset:
         -> (type): description
 
         """
-        => To be filled by student
+        self.db.open_connection()
+        self.db.open_cursor()
+        self.num_cols = list(self.db.run_query(get_numeric_tables_query(self.schema_name, self.table_name))[0])
+        for column in self.num_cols:
+            for col in self.df.columns:
+                if (col == column):
+                    self.df[col] = pd.to_numeric(self.df[col])
+        self.db.close_cursor()
+        self.db.close_connection()
 
     def set_text_columns(self):
         """
@@ -226,7 +258,15 @@ class Dataset:
         -> (type): description
 
         """
-        => To be filled by student
+        self.db.open_connection()
+        self.db.open_cursor()
+        self.text_cols = list(self.db.run_query(get_text_tables_query(self.schema_name, self.table_name))[0])
+        for column in self.text_cols:
+            for col in self.df.columns:
+                if (col == column):
+                    self.df[col] = self.df[col].astype(str)
+        self.db.close_cursor()
+        self.db.close_connection()
 
     def set_date_columns(self):
         """
@@ -255,7 +295,15 @@ class Dataset:
         -> (type): description
 
         """
-        => To be filled by student
+        self.db.open_connection()
+        self.db.open_cursor()
+        self.date_cols = list(self.db.run_query(get_date_tables_query(self.schema_name, self.table_name))[0])
+        for column in self.date_cols:
+            for col in self.df.columns:
+                if (col == column):
+                    self.df[col] = pd.to_datetime(self.df[col])
+        self.db.close_cursor()
+        self.db.close_connection()
 
     def get_head(self, n=5):
         """
@@ -283,7 +331,7 @@ class Dataset:
         -> (type): description
 
         """
-        => To be filled by student
+        return self.df.head(n)
 
     def get_tail(self, n=5):
         """
@@ -311,7 +359,7 @@ class Dataset:
         -> (type): description
 
         """
-        => To be filled by student
+        return self.df.tail(n)
 
     def get_sample(self, n=5):
         """
@@ -339,7 +387,7 @@ class Dataset:
         -> (type): description
 
         """
-        => To be filled by student
+        return self.df.sample(n)
 
     def get_summary_df(self):
         """
@@ -367,4 +415,15 @@ class Dataset:
         -> (type): description
 
         """
-        => To be filled by student
+        summary = pd.DataFrame()
+        summary['Description'] = ['Name of Table', 'Number of Rows', 'Number of Columns', 'Number of Duplicated Rows', 'Number of Rows with Missing Values']
+        summary['Value'] = [self.table_name, self.n_rows, self.n_cols, self.n_duplicates, self.n_missing]
+        return summary
+
+    def get_schema(self):
+        self.db.open_connection()
+        self.db.open_cursor()
+        schema = self.db.get_table_schema(self.schema_name, self.table_name)
+        self.db.close_cursor()
+        self.db.close_connection()
+        return schema

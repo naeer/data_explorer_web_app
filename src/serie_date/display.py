@@ -1,9 +1,10 @@
 import streamlit as st
 
+from src.dataframe.logics import Dataset
 from src.serie_date.logics import DateColumn
 
 
-def display_dates():
+def display_dates(schema_name, table_name):
     """
     --------------------
     Description
@@ -29,7 +30,12 @@ def display_dates():
     -> (type): description
 
     """
-    => To be filled by student
+    Data_all = Dataset(schema_name, table_name)
+    Data_all.set_data()
+    date_cols = Data_all.date_cols
+    for idx, column in enumerate(date_cols):
+        with st.expander(f"{idx+1}. column: {column}"):
+            display_date(schema_name, table_name, column)
 
 def display_date(col_name, i):
     """
@@ -57,4 +63,10 @@ def display_date(col_name, i):
     -> (type): description
 
     """
-    => To be filled by student
+    Data = DateColumn(schema_name, table_name, col_name)
+    Data.set_data()
+    st.table(data=Data.get_summary_df())
+    st.subheader('Bar Chart')
+    st.altair_chart(Data.barchart, use_container_width=True)
+    st.subheader('Most Frequent Values')
+    st.dataframe(data=Data.frequent)

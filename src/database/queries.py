@@ -52,7 +52,6 @@ def get_table_data_query(schema_name, table_name):
     query = f"SELECT * FROM {schema_name}.{table_name}"
     return query
 
-
 def get_table_schema_query(schema_name, table_name):
     """
     --------------------
@@ -81,5 +80,5 @@ def get_table_schema_query(schema_name, table_name):
     -> (type): description
     -> (str): Returns the query that is used to extract a list of columns and their information from a Postgres table
     """
-    query = f"SELECT * FROM information_schema.columns WHERE table_schema = '{schema_name}' AND table_name = '{table_name}';"
-    return query
+	query = f"SELECT c.table_name, c.column_name, c.data_type, CASE WHEN EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.constraint_column_usage k WHERE c.table_name = k.table_name and k.column_name = c.column_name) THEN true ELSE false END as primary_key, c.is_nullable, c.character_maximum_length, c.numeric_precision FROM INFORMATION_SCHEMA.COLUMNS c WHERE c.table_name='employees'"
+	return query
