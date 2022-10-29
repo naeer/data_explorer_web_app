@@ -24,8 +24,7 @@ def get_numeric_tables_query(schema_name, table_name):
     -> (type): description
 
     """
-    query = f"select column_name from information_schema.columns where table_schema = '{schema_name}' and table_name = '{table_name}' and data_type in ('smallint', 'integer', 'bigint', 'decimal', 'numeric', 'real', 'double precision', 'smallserial', 'serial', 'bigserial', 'money')"
-    return query
+    => To be filled by student
 
 def get_text_tables_query(schema_name, table_name):
     """
@@ -53,8 +52,7 @@ def get_text_tables_query(schema_name, table_name):
     -> (type): description
 
     """
-    query = f"select column_name from information_schema.columns where table_schema = '{schema_name}' and table_name = '{table_name}' and data_type in ('character varying', 'character', 'text', 'char', 'name', 'bytea')"
-    return query
+    => To be filled by student
 
 def get_date_tables_query(schema_name, table_name):
     """
@@ -82,5 +80,4 @@ def get_date_tables_query(schema_name, table_name):
     -> (type): description
 
     """
-    query = f"select column_name from information_schema.columns where table_schema = '{schema_name}' and table_name = '{table_name}' and data_type in ('timestamp without time zone', 'timestamp with time zone', 'time with time zone', 'time without time zone', 'interval', 'date')"
-    return query
+    => To be filled by student

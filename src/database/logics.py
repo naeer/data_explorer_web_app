@@ -97,7 +97,7 @@ class PostgresConnector:
         --------------------
         Description
         --------------------
-        -> open_cursor (method): Class method that creates an active cursor to a Postgres database
+        -> open_cursor (method): Class method that creates an active cursor to a Postgres database 
 
         --------------------
         Parameters
@@ -117,12 +117,13 @@ class PostgresConnector:
         """
         self.cursor = self.conn.cursor()
 
+        
     def close_cursor(self):
         """
         --------------------
         Description
         --------------------
-        -> close_cursor (method): Class method that closes an active cursor to a Postgres database
+        -> close_cursor (method): Class method that closes an active cursor to a Postgres database 
 
         --------------------
         Parameters
@@ -244,8 +245,8 @@ class PostgresConnector:
         -> (list): Returns the content of a table as a list by passing the name of the schema and the table to a SQL query
 
         """
-        query = get_table_data_query(schema_name, table_name)
-        self.cursor.execute(query)
+        sql_query = get_table_data_query(schema_name=schema_name, table_name=table_name)
+        self.cursor.execute(sql_query)
         df = pd.DataFrame(self.cursor.fetchall(), columns=[desc[0] for desc in self.cursor.description])
         return df
 
@@ -277,7 +278,7 @@ class PostgresConnector:
         -> (list): Returns the schema information of a table as a list by passing the name of the schema and the table as a SQL query
 
         """
-        query = get_table_schema_query(schema_name, table_name)
-        self.cursor.execute(query)
+        sql_query = get_table_schema_query(schema_name=schema_name, table_name=table_name)
+        self.cursor.execute(sql_query)
         df = pd.DataFrame(self.cursor.fetchall(), columns=[desc[0] for desc in self.cursor.description])
         return df

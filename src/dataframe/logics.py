@@ -27,25 +27,15 @@ class Dataset:
     -> text_cols (list): List of columns of text type (optional)
     -> date_cols (list): List of columns of datetime type (optional)
     """
-    def __init__(self, schema_name=None, table_name=None, db=PostgresConnector(), df=pd.DataFrame()):
-        self.schema_name = schema_name
-        self.table_name = table_name
-        self.db = db
-        self.df = df
-        self.n_rows = None
-        self.n_cols = None
-        self.n_duplicates = None
-        self.n_missing = None
-        self.num_cols = None
-        self.text_cols = None
-        self.date_cols = None
+    def __init__(self, schema_name=None, table_name=None, db=None, df=None):
+        => To be filled by student
 
     def set_data(self):
         """
         --------------------
         Description
         --------------------
-        -> set_data (method): Class method that computes all requested information from self.df to be displayed in the Overall section of Streamlit app
+        -> set_data (method): Class method that computes all requested information from self.df to be displayed in the Overall section of Streamlit app 
 
         --------------------
         Parameters
@@ -86,7 +76,7 @@ class Dataset:
         --------------------
         Description
         --------------------
-        -> is_df_none (method): Class method that checks if self.df is empty or none
+        -> is_df_none (method): Class method that checks if self.df is empty or none 
 
         --------------------
         Parameters
@@ -107,7 +97,7 @@ class Dataset:
         -> (type): description
 
         """
-        return (self.df == None) | self.df.empty
+        => To be filled by student
 
     def set_dimensions(self):
         """
@@ -135,8 +125,7 @@ class Dataset:
         -> (type): description
 
         """
-        self.n_rows = self.df.shape[0]
-        self.n_cols = self.df.shape[1]
+        => To be filled by student
 
     def set_duplicates(self):
         """
@@ -164,7 +153,7 @@ class Dataset:
         -> (type): description
 
         """
-        self.n_duplicates = self.df.duplicated().sum()
+        => To be filled by student
 
     def set_missing(self):
         """
@@ -192,7 +181,7 @@ class Dataset:
         -> (type): description
 
         """
-        self.n_missing = self.df.isna().sum().sum()
+        => To be filled by student
 
     def set_numeric_columns(self):
         """
@@ -331,7 +320,7 @@ class Dataset:
         -> (type): description
 
         """
-        return self.df.head(n)
+        => To be filled by student
 
     def get_tail(self, n=5):
         """
@@ -359,7 +348,7 @@ class Dataset:
         -> (type): description
 
         """
-        return self.df.tail(n)
+        => To be filled by student
 
     def get_sample(self, n=5):
         """
@@ -387,7 +376,7 @@ class Dataset:
         -> (type): description
 
         """
-        return self.df.sample(n)
+        => To be filled by student
 
     def get_summary_df(self):
         """
