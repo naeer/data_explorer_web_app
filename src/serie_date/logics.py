@@ -37,7 +37,7 @@ class DateColumn:
         self.schema_name = schema_name
         self.table_name = table_name
         self.col_name = col_name
-        self.db = PostgresConnector()
+        self.db = db
         self.serie = pd.Series()
         self.n_unique = None
         self.n_missing = None
@@ -77,24 +77,23 @@ class DateColumn:
         -> (type): description
 
         """
-        # self.db.open_connection()
         self.db.open_cursor()
         self.serie = self.db.run_query(get_column_query(self.schema_name, self.table_name, self.col_name))[0].squeeze()
         self.db.close_cursor()
-        # self.db.close_connection()
 
-        self.is_serie_none()
-        self.set_unique()
-        self.set_missing()
-        self.set_min()
-        self.set_max()
-        self.set_weekend()
-        self.set_weekday()
-        self.set_future()
-        self.set_empty_1900()
-        self.set_empty_1970()
-        self.set_barchart()
-        self.set_frequent()
+
+        if (not self.is_serie_none()):
+            self.set_unique()
+            self.set_missing()
+            self.set_min()
+            self.set_max()
+            self.set_weekend()
+            self.set_weekday()
+            self.set_future()
+            self.set_empty_1900()
+            self.set_empty_1970()
+            self.set_barchart()
+            self.set_frequent()
 
     def is_serie_none(self):
         """
@@ -122,7 +121,7 @@ class DateColumn:
         -> (type): description
 
         """
-        return (self.serie == None) | self.serie.empty
+        return self.serie.empty
 
     def set_unique(self):
         """
@@ -467,7 +466,7 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
+        #self.db.open_connection()
         self.db.open_cursor()
         counts = self.serie.value_counts().to_frame().head(end)
         counts_perc = round(self.serie.value_counts(normalize=True).to_frame().head(end), 4)
@@ -477,7 +476,7 @@ class DateColumn:
         value_c['percentage'] = counts_perc.values
         self.frequent = value_c
         self.db.close_cursor()
-        self.db.close_connection()
+        #self.db.close_connection()
 
     def get_summary_df(self):
         """
@@ -507,5 +506,5 @@ class DateColumn:
         """
         summary = pd.DataFrame()
         summary['Description'] = ['Number of Unique Values', 'Number of Rows with Missing Values', 'Number of Weekend Dates', 'Number of Weekday Dates', 'Number of Dates in Future', 'Number of Rows with 1900-01-01', 'Number of Rows with 1970-01-01', 'Minimum Value', 'Maximum Value']
-        summary['Value'] = [self.n_unique, self.n_missing, self.n_weekend, self.n_weekday, self.n_future, self.n_empty_1900, self.n_empty_1970, self.col_min, self.col_max]
+        summary['Value'] = [str(self.n_unique), str(self.n_missing), str(self.n_weekend), str(self.n_weekday), str(self.n_future), str(self.n_empty_1900), str(self.n_empty_1970), str(self.col_min), str(self.col_max)]
         return summary

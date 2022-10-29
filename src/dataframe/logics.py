@@ -27,11 +27,11 @@ class Dataset:
     -> text_cols (list): List of columns of text type (optional)
     -> date_cols (list): List of columns of datetime type (optional)
     """
-    def __init__(self, schema_name=None, table_name=None, db=PostgresConnector(), df=pd.DataFrame()):
+    def __init__(self, schema_name=None, table_name=None, db=None, df=None):
         self.schema_name = schema_name
         self.table_name = table_name
         self.db = db
-        self.df = df
+        self.df = pd.DataFrame()
         self.n_rows = None
         self.n_cols = None
         self.n_duplicates = None
@@ -66,20 +66,17 @@ class Dataset:
         -> (type): description
 
         """
-        # self.db.open_connection()
         self.db.open_cursor()
         self.df = self.db.load_table(self.schema_name, self.table_name)
         self.db.close_cursor()
-        # self.db.close_connection()
 
-        self.is_df_none()
-        self.set_dimensions()
-        self.set_duplicates()
-        self.set_missing()
-
-        # self.set_numeric_columns()
-        # self.set_text_columns()
-        # self.set_date_columns()
+        if (not self.is_df_none()):
+            self.set_dimensions()
+            self.set_duplicates()
+            self.set_missing()
+            self.set_numeric_columns()
+            self.set_text_columns()
+            self.set_date_columns()
 
     def is_df_none(self):
         """
@@ -107,7 +104,7 @@ class Dataset:
         -> (type): description
 
         """
-        return (self.df == None) | self.df.empty
+        return self.df.empty
 
     def set_dimensions(self):
         """
@@ -223,11 +220,13 @@ class Dataset:
         """
         # self.db.open_connection()
         self.db.open_cursor()
-        self.num_cols = list(self.db.run_query(get_numeric_tables_query(self.schema_name, self.table_name))[0])
-        for column in self.num_cols:
-            for col in self.df.columns:
-                if (col == column):
-                    self.df[col] = pd.to_numeric(self.df[col])
+        result = self.db.run_query(get_numeric_tables_query(self.schema_name, self.table_name))
+        if (not result.empty):
+            self.num_cols = list(result[0])
+            for column in self.num_cols:
+                for col in self.df.columns:
+                    if (col == column):
+                        self.df[col] = pd.to_numeric(self.df[col])
         self.db.close_cursor()
         # self.db.close_connection()
 
@@ -260,11 +259,13 @@ class Dataset:
         """
         # self.db.open_connection()
         self.db.open_cursor()
-        self.text_cols = list(self.db.run_query(get_text_tables_query(self.schema_name, self.table_name))[0])
-        for column in self.text_cols:
-            for col in self.df.columns:
-                if (col == column):
-                    self.df[col] = self.df[col].astype(str)
+        result = self.db.run_query(get_text_tables_query(self.schema_name, self.table_name))
+        if (not result.empty):
+            self.text_cols = list(result[0])
+            for column in self.text_cols:
+                for col in self.df.columns:
+                    if (col == column):
+                        self.df[col] = self.df[col].astype(str)
         self.db.close_cursor()
         # self.db.close_connection()
 
@@ -297,11 +298,13 @@ class Dataset:
         """
         # self.db.open_connection()
         self.db.open_cursor()
-        self.date_cols = list(self.db.run_query(get_date_tables_query(self.schema_name, self.table_name))[0])
-        for column in self.date_cols:
-            for col in self.df.columns:
-                if (col == column):
-                    self.df[col] = pd.to_datetime(self.df[col])
+        result = self.db.run_query(get_date_tables_query(self.schema_name, self.table_name))
+        if (not result.empty):
+            self.date_cols = list(result[0])
+            for column in self.date_cols:
+                for col in self.df.columns:
+                    if (col == column):
+                        self.df[col] = pd.to_datetime(self.df[col])
         self.db.close_cursor()
         # self.db.close_connection()
 

@@ -34,12 +34,15 @@ def display_dates():
     table_name = st.session_state['table_selected']
     Data_all = Dataset(schema_name, table_name, db=st.session_state['db'])
     Data_all.set_data()
-    date_cols = Data_all.date_cols
-    for idx, column in enumerate(date_cols):
-        with st.expander(f"{idx+1}. column: {column}"):
-            display_date(schema_name, table_name, column)
+    if (Data_all.date_cols != None):
+        date_cols = Data_all.date_cols
+        for idx, column in enumerate(date_cols):
+            with st.expander(f"{idx+1}. column: {column}"):
+                display_date(column)
 
-def display_date(col_name, i):
+
+#def display_date(col_name, i):
+def display_date(col_name):
     """
     --------------------
     Description
@@ -67,7 +70,7 @@ def display_date(col_name, i):
     """
     schema_name = st.session_state['schema_selected']
     table_name = st.session_state['table_selected']
-    Data = DateColumn(schema_name, table_name, col_name)
+    Data = DateColumn(schema_name, table_name, col_name, db=st.session_state['db'])
     Data.set_data()
     st.table(data=Data.get_summary_df())
     st.subheader('Bar Chart')
