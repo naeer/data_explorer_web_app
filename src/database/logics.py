@@ -63,8 +63,9 @@ class PostgresConnector:
             host=self.host,
             port=self.port,
             database=self.database)
+            return self.conn
         except OperationalError:
-            print(OperationalError)
+            return None
 
     def close_connection(self):
         """
@@ -213,7 +214,7 @@ class PostgresConnector:
             for i in range(len(tuples)):
                 if tuples[i] not in self.excluded_schemas and i == 0:
                     i = i + 1
-                    list_tables.append(tuples[i])
+                    list_tables.append(tuples)
         return list_tables
 
     def load_table(self, schema_name, table_name):
@@ -246,8 +247,8 @@ class PostgresConnector:
         """
         sql_query = get_table_data_query(schema_name=schema_name, table_name=table_name)
         self.cursor.execute(sql_query)
-        query_result = self.cursor.fetchall()
-        return query_result
+        df = pd.DataFrame(self.cursor.fetchall(), columns=[desc[0] for desc in self.cursor.description])
+        return df
 
     def get_table_schema(self, schema_name, table_name):
         """
@@ -279,5 +280,5 @@ class PostgresConnector:
         """
         sql_query = get_table_schema_query(schema_name=schema_name, table_name=table_name)
         self.cursor.execute(sql_query)
-        query_result = self.cursor.fetchall()
-        return query_result
+        df = pd.DataFrame(self.cursor.fetchall(), columns=[desc[0] for desc in self.cursor.description])
+        return df
