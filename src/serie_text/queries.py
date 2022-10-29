@@ -1,13 +1,13 @@
-def get_missing_query(schema_name, table_name, col_name):
-    """
-    --------------------
-    Description
-    --------------------
-    -> get_missing_query (method): Function that returns the query used for computing the number of missing values of a column from a Postgres table
-"""
-query = f"select count({col_name}) from {schema_name}.{table_name} where {col_name} is NULL"
- 
-return query
+#def get_missing_query(schema_name, table_name, col_name):
+#    """
+#    --------------------
+#    Description
+#    --------------------
+#    -> get_missing_query (method): Function that returns the query used for computing the number of missing values of a column from a Postgres table
+#"""
+#query = f"select count({col_name}) from {schema_name}.{table_name} where {col_name} is NULL"
+# 
+#return query
 
 def get_mode_query(schema_name, table_name, col_name):
     """
