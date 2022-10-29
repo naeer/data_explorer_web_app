@@ -469,8 +469,8 @@ class DateColumn:
         """
         self.db.open_connection()
         self.db.open_cursor()
-        counts = self.serie.value_counts().to_frame()
-        counts_perc = round(self.serie.value_counts(normalize=True).to_frame(), 4)
+        counts = self.serie.value_counts().to_frame().head(end)
+        counts_perc = round(self.serie.value_counts(normalize=True).to_frame().head(end), 4)
         value_c = pd.DataFrame()
         value_c['value'] = pd.to_datetime(counts.index)
         value_c['occurrence'] = counts.values
