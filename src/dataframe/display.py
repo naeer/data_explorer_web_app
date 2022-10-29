@@ -2,7 +2,7 @@ import streamlit as st
 
 from src.dataframe.logics import Dataset
 
-def read_data(schema_name, table_name):
+def read_data():
     """
     --------------------
     Description
@@ -28,11 +28,14 @@ def read_data(schema_name, table_name):
     -> (type): description
 
     """
-    Data = Dataset(schema_name, table_name)
+    schema_name = st.session_state['schema_selected']
+    table_name = st.session_state['table_selected']
+    db = st.session_state['db']
+    Data = Dataset(schema_name, table_name, db=db)
     Data.set_data()
     return Data
 
-def display_overall(schema_name, table_name):
+def display_overall():
     """
     --------------------
     Description
@@ -58,7 +61,7 @@ def display_overall(schema_name, table_name):
     -> (type): description
 
     """
-    Data = read_data(schema_name, table_name)
+    Data = read_data()
     st.header('Overall Information')
     st.table(data=Data.get_summary_df())
     st.header('Table Schema')
@@ -90,7 +93,7 @@ def display_dataframes():
     -> (type): description
 
     """
-    Data = read_data(schema_name, table_name)
+    Data = read_data()
     nrow = st.slider('Select the number of rows to be displayed', 5, 50)
     logic = st.radio('Exploration Method', ('Head', 'Tail', 'Sample'))
     if logic == 'Head':

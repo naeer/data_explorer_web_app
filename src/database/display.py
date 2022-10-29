@@ -120,4 +120,5 @@ def display_table_selection():
         if tuples[1] == selected_table:
             selected_schema = tuples[0]
     set_session_states(['schema_selected', 'table_selected'], [selected_schema, selected_table])
-    read_data()
+    st.session_state['db'].close_cursor()
+    st.session_state['data'] = read_data()

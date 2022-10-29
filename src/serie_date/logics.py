@@ -77,11 +77,11 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
+        # self.db.open_connection()
         self.db.open_cursor()
         self.serie = self.db.run_query(get_column_query(self.schema_name, self.table_name, self.col_name))[0].squeeze()
         self.db.close_cursor()
-        self.db.close_connection()
+        # self.db.close_connection()
 
         self.is_serie_none()
         self.set_unique()
@@ -206,11 +206,11 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
+        # self.db.open_connection()
         self.db.open_cursor()
         self.col_min = self.db.run_query(get_min_date_query(self.schema_name, self.table_name, self.col_name))[0][0]
         self.db.close_cursor()
-        self.db.close_connection()
+        # self.db.close_connection()
 
     def set_max(self):
         """
@@ -238,11 +238,11 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
+        # self.db.open_connection()
         self.db.open_cursor()
         self.col_max = self.db.run_query(get_max_date_query(self.schema_name, self.table_name, self.col_name))[0][0]
         self.db.close_cursor()
-        self.db.close_connection()
+        # self.db.close_connection()
 
     def set_weekend(self):
         """
@@ -270,11 +270,11 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
+        # self.db.open_connection()
         self.db.open_cursor()
         self.n_weekend = self.db.run_query(get_weekend_count_query(self.schema_name, self.table_name, self.col_name))[0][0]
         self.db.close_cursor()
-        self.db.close_connection()
+        # self.db.close_connection()
 
     def set_weekday(self):
         """
@@ -302,11 +302,11 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
+        # self.db.open_connection()
         self.db.open_cursor()
         self.n_weekday = self.db.run_query(get_weekday_count_query(self.schema_name, self.table_name, self.col_name))[0][0]
         self.db.close_cursor()
-        self.db.close_connection()
+        # self.db.close_connection()
 
     def set_future(self):
         """
@@ -334,11 +334,11 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
+        # self.db.open_connection()
         self.db.open_cursor()
         self.n_future = self.db.run_query(get_future_count_query(self.schema_name, self.table_name, self.col_name))[0][0]
         self.db.close_cursor()
-        self.db.close_connection()
+        # self.db.close_connection()
 
     def set_empty_1900(self):
         """
@@ -366,11 +366,11 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
+        # self.db.open_connection()
         self.db.open_cursor()
         self.n_empty_1900 = self.db.run_query(get_1900_count_query(self.schema_name, self.table_name, self.col_name))[0][0]
         self.db.close_cursor()
-        self.db.close_connection()
+        # self.db.close_connection()
 
     def set_empty_1970(self):
         """
@@ -398,11 +398,11 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
+        # self.db.open_connection()
         self.db.open_cursor()
         self.n_empty_1970 = self.db.run_query(get_1970_count_query(self.schema_name, self.table_name, self.col_name))[0][0]
         self.db.close_cursor()
-        self.db.close_connection()
+        # self.db.close_connection()
 
     def set_barchart(self):
         """
@@ -430,7 +430,7 @@ class DateColumn:
         -> (type): description
 
         """
-        self.db.open_connection()
+        # self.db.open_connection()
         self.db.open_cursor()
         counts = self.serie.value_counts().to_frame()
         value_c = pd.DataFrame()
@@ -438,7 +438,7 @@ class DateColumn:
         value_c['occurrence'] = counts.values
         self.barchart = alt.Chart(value_c).mark_bar().encode(x='value', y='occurrence')
         self.db.close_cursor()
-        self.db.close_connection()
+        # self.db.close_connection()
 
 
     def set_frequent(self, end=20):

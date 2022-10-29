@@ -1,15 +1,29 @@
-version: '3.8'
+version: “3”
 services:
-  db:
-    image: postgres:14.1-alpine
-    restart: always
+  app_name:
+    build: .
+    volumes:
+       - .:/app
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+       - POSTGRES_HOST=hh-pgsql-public.ebi.ac.uk
+       - POSTGRES_USER=reader
+       - POSTGRES_PASSWORD=NWDMCE5xdipIjRrp
+       - POSTGRES_DB=pfmegrnargs
+       - POSTGRES_PORT=5432
     ports:
-      - '5432:5432'
-    volumes: 
-      - db:/var/lib/postgresql/data
-volumes:
-  db:
-    driver: local
+       - "8501:8501"
+    depends_on:
+       - db_name
+    command: python -m streamlit run app/streamlit_app.py   
+  db_name:
+    image: postgres:latest
+    environment:
+       - POSTGRES_HOST=hh-pgsql-public.ebi.ac.uk
+       - POSTGRES_USER=reader
+       - POSTGRES_PASSWORD=NWDMCE5xdipIjRrp
+       - POSTGRES_DB=pfmegrnargs
+       - POSTGRES_PORT=5432
+    ports:
+       - "5432"
+    volumes:
+       - ./data:/var/lib/postgresql/data
