@@ -38,11 +38,10 @@ def display_dates():
         date_cols = Data_all.date_cols
         for idx, column in enumerate(date_cols):
             with st.expander(f"{idx+1}. column: {column}"):
-                display_date(column)
+                display_date(column, idx)
 
 
-#def display_date(col_name, i):
-def display_date(col_name):
+def display_date(col_name, i):
     """
     --------------------
     Description
