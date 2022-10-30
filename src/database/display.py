@@ -81,6 +81,7 @@ def connect_db():
     elif conn_object.status == 1:
         st.success('Connection to database established', icon="ℹ️")
         set_session_states(['db_status', 'db'], [conn_object.status, postgresConnector])
+    postgresConnector.close_connection()
 
 def display_table_selection():
     """
@@ -107,18 +108,15 @@ def display_table_selection():
     => To be filled by student
     -> (type): description
     """
+    st.session_state['db'].open_connection()
     st.session_state['db'].open_cursor()
-    extract_list_tables_and_schemas = st.session_state['db'].list_tables()
-    list_schemas = []
-    list_tables = []
-    for tuples in extract_list_tables_and_schemas:
-        list_schemas.append(tuples[0])
-        list_tables.append(tuples[1])
-    selected_table = st.selectbox(label='Select a table name', options=list_tables)
-    for tuples in extract_list_tables_and_schemas:
-        if tuples[1] == selected_table:
-            selected_schema = tuples[0]
+    list_schema_tables = st.session_state['db'].list_tables()
+    selected_schema_table = st.selectbox(label='Select a table name', options=list_schema_tables)
+    split_schema_table = selected_schema_table.split(".")
+    selected_schema = split_schema_table[0]
+    selected_table = split_schema_table[1]
     set_session_states(['schema_selected', 'table_selected'], [selected_schema, selected_table])
     st.session_state['db'].close_cursor()
+    st.session_state['db'].close_connection()
     data = read_data()
     set_session_states(['data'], [data])

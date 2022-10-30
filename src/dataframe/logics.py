@@ -66,11 +66,11 @@ class Dataset:
         -> (type): description
 
         """
-        # self.db.open_connection()
+        self.db.open_connection()
         self.db.open_cursor()
         self.df = self.db.load_table(self.schema_name, self.table_name)
         self.db.close_cursor()
-        # self.db.close_connection()
+        self.db.close_connection()
 
         self.is_df_none()
         self.set_dimensions()
@@ -221,7 +221,7 @@ class Dataset:
         -> (type): description
 
         """
-        # self.db.open_connection()
+        self.db.open_connection()
         self.db.open_cursor()
         self.num_cols = list(self.db.run_query(get_numeric_tables_query(self.schema_name, self.table_name))[0])
         for column in self.num_cols:
@@ -229,7 +229,7 @@ class Dataset:
                 if (col == column):
                     self.df[col] = pd.to_numeric(self.df[col])
         self.db.close_cursor()
-        # self.db.close_connection()
+        self.db.close_connection()
 
     def set_text_columns(self):
         """
@@ -258,7 +258,7 @@ class Dataset:
         -> (type): description
 
         """
-        # self.db.open_connection()
+        self.db.open_connection()
         self.db.open_cursor()
         self.text_cols = list(self.db.run_query(get_text_tables_query(self.schema_name, self.table_name))[0])
         for column in self.text_cols:
@@ -266,7 +266,7 @@ class Dataset:
                 if (col == column):
                     self.df[col] = self.df[col].astype(str)
         self.db.close_cursor()
-        # self.db.close_connection()
+        self.db.close_connection()
 
     def set_date_columns(self):
         """
@@ -295,7 +295,7 @@ class Dataset:
         -> (type): description
 
         """
-        # self.db.open_connection()
+        self.db.open_connection()
         self.db.open_cursor()
         self.date_cols = list(self.db.run_query(get_date_tables_query(self.schema_name, self.table_name))[0])
         for column in self.date_cols:
@@ -303,7 +303,7 @@ class Dataset:
                 if (col == column):
                     self.df[col] = pd.to_datetime(self.df[col])
         self.db.close_cursor()
-        # self.db.close_connection()
+        self.db.close_connection()
 
     def get_head(self, n=5):
         """
@@ -421,9 +421,9 @@ class Dataset:
         return summary
 
     def get_schema(self):
-        # self.db.open_connection()
+        self.db.open_connection()
         self.db.open_cursor()
         schema = self.db.get_table_schema(self.schema_name, self.table_name)
         self.db.close_cursor()
-        # self.db.close_connection()
+        self.db.close_connection()
         return schema
