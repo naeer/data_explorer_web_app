@@ -22,7 +22,7 @@ def get_tables_list_query():
     --------------------
     -> (str): Returns the query that is used to extract the list of tables from a Postgres database
     """
-    query = "SELECT table_schema, table_name FROM information_schema.tables;"
+    query = "SELECT table_schema || '.' || table_name AS table_name FROM information_schema.tables;"
     return query
 
 def get_table_data_query(schema_name, table_name):

@@ -59,7 +59,6 @@ def set_session_state(key, value):
     -> (type): description
 
     """
-    #=> To be filled by student
     if value is None:
         if key not in st.session_state:
             st.session_state[key] = value

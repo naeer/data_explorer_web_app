@@ -209,11 +209,10 @@ class PostgresConnector:
         self.cursor.execute(sql_query)
         query_result = self.cursor.fetchall()
         list_tables = []
-        for tuples in query_result:
-            for i in range(len(tuples)):
-                if tuples[i] not in self.excluded_schemas and i == 0:
-                    i = i + 1
-                    list_tables.append(tuples)
+        for results in query_result:
+            result_after_split = results[0].split(".")
+            if result_after_split[0] not in self.excluded_schemas:
+                list_tables.append(results[0])
         return list_tables
 
     def load_table(self, schema_name, table_name):
