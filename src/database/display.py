@@ -70,7 +70,6 @@ def connect_db():
     -> (type): description
 
     """
-    #=> To be filled by student
     postgresConnector = PostgresConnector(database=st.session_state['db_name'], 
                                           user=st.session_state['db_user'], 
                                           password=st.session_state['db_pass'], 
@@ -121,4 +120,5 @@ def display_table_selection():
             selected_schema = tuples[0]
     set_session_states(['schema_selected', 'table_selected'], [selected_schema, selected_table])
     st.session_state['db'].close_cursor()
-    st.session_state['data'] = read_data()
+    data = read_data()
+    set_session_states(['data'], [data])
