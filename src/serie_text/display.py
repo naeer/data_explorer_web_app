@@ -13,10 +13,11 @@ def display_texts():
     """
     schema_name = st.session_state['schema_selected']
     table_name = st.session_state['table_selected']
-    Data_all = Dataset(schema_name, table_name, db=st.session_state['db'])
-    Data_all.set_data()
-    if (Data_all.text_cols != None):
-        text_cols = Data_all.text_cols
+    db = st.session_state['db']
+    Data = Dataset(schema_name, table_name, db=db)
+    Data.set_data()
+    if (Data.StringDtype!= None):
+        text_cols = Data_all.StringDtype
         for idx, column in enumerate(text_cols):
             with st.expander(f"{idx+1}. column: {column}"):
                 display_text(column)

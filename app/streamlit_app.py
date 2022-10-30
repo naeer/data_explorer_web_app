@@ -31,8 +31,8 @@ if st.session_state.db_status:
 #            display_numerics()
         with tab4:
             display_texts()
-        with tab5:
-            display_dates()
+#        with tab5:
+#            display_dates()
 
 # Add Debugger
 with st.expander("Streamlit Session State", expanded=False):
