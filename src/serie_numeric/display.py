@@ -77,7 +77,6 @@ def display_numeric(col_name, i):
     if not NC.is_serie_none():
         st.table(data=NC.get_summary_df(col_name))
         ### test code
-        # st.altair_chart(Data.barchart, use_container_width=True)
         st.altair_chart(NC.histogram, use_container_width=True)
         ### end test code
     
