@@ -421,9 +421,9 @@ class NumericColumn:
         self.db.open_cursor()
         counts = self.serie.value_counts().to_frame()
         value_c = pd.DataFrame()
-        value_c['value'] = pd.to_numeric(counts.index)
-        value_c['occurrence'] = counts.values
-        self.histogram = alt.Chart(value_c).mark_bar().encode(x='value', y='occurrence')
+        value_c['id'] = pd.to_numeric(counts.index)
+        value_c['Count of Records'] = counts.values
+        self.histogram = alt.Chart(value_c).mark_bar().encode(alt.X("id", bin=alt.Bin(maxbins=50)), y='Count of Records')
         self.db.close_cursor()
         # self.db.close_connection()
 
