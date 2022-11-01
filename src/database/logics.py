@@ -48,12 +48,16 @@ class PostgresConnector:
         --------------------
         => To be filled by student
         -> pseudo-code
-        -> 
+        -> try:
+            -> Create an active connection to the Postgres database by calling the connect() function of psycopg2 class and passing the user, password, host, port and name of database
+            -> Return the active connection object
+        -> except:
+            -> Return None
 
         --------------------
         Returns
         --------------------
-        -> None
+        -> (psycopg2.extensions.connection) Returns an active connection object if connection successful, otherwise returns None
 
         """
         try:
@@ -234,13 +238,13 @@ class PostgresConnector:
         --------------------
         -> Get the SQL query from the get_table_data_query() function by passing the schema name and the table name
         -> Execute the SQL query by calling the execute() method of the cursor class
-        -> Retrieve all the rows from the result of the SQL query by calling the fetchall() method
-        -> Return the all the rows of the SQL query as a list
+        -> Retrieve all the rows from the result of the SQL query by calling the fetchall() method and the column names of the table and store it as a Pandas dataframe
+        -> Return the Pandas dataframe
 
         --------------------
         Returns
         --------------------
-        -> (list): Returns the content of a table as a list by passing the name of the schema and the table to a SQL query
+        -> (pandas.core.frame.DataFrame): Returns the content of a table as a Pandas dataframe by passing the name of the schema and the table to a SQL query
 
         """
         query = get_table_data_query(schema_name, table_name)
@@ -267,13 +271,13 @@ class PostgresConnector:
         --------------------
         -> Get the SQL query from the get_table_schema_query() function by passing the schema name and the table name
         -> Execute the SQL query by calling the execute() method of the cursor class
-        -> Retrieve all the rows from the result of the SQL query by calling the fetchall() method
-        -> Return the all the rows of the SQL query as a list
+        -> Retrieve all the rows from the result of the SQL query by calling the fetchall() method and the column names of the table and store it as a Pandas dataframe
+        -> Return the Pandas dataframe
 
         --------------------
         Returns
         --------------------
-        -> (list): Returns the schema information of a table as a list by passing the name of the schema and the table as a SQL query
+        -> (pandas.core.frame.DataFrame): Returns the schema information of a table as a Pandas dataframe by passing the name of the schema and the table as a SQL query
 
         """
         query = get_table_schema_query(schema_name, table_name)

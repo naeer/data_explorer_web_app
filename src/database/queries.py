@@ -14,7 +14,7 @@ def get_tables_list_query():
     --------------------
     Pseudo-Code
     --------------------
-    -> Set the query to extract the list of tables from a Postgres database in a variable called query
+    -> Set the query to extract the list of tables (in the form of schema.table) from a Postgres database in a variable called query
     -> Return that variable
 
     --------------------
@@ -68,17 +68,13 @@ def get_table_schema_query(schema_name, table_name):
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
     -> Set the query to extract a list of columns and their information from a Postgres table in a variable called query
     -> Return that variable
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
     -> (str): Returns the query that is used to extract a list of columns and their information from a Postgres table
     """
-    query = f"SELECT c.table_name, c.column_name, c.data_type, CASE WHEN EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.constraint_column_usage k WHERE c.table_name = k.table_name and k.column_name = c.column_name) THEN true ELSE false END as primary_key, c.is_nullable, c.character_maximum_length, c.numeric_precision FROM INFORMATION_SCHEMA.COLUMNS c WHERE c.table_name='{table_name}'"
+    query = f"SELECT c.table_name, c.column_name, c.data_type, CASE WHEN EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.constraint_column_usage k WHERE c.table_name = k.table_name and k.column_name = c.column_name) THEN true ELSE false END as primary_key, c.is_nullable, c.character_maximum_length, c.numeric_precision FROM INFORMATION_SCHEMA.COLUMNS c WHERE c.table_schema='{schema_name}' AND c.table_name='{table_name}'"
     return query

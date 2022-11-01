@@ -15,20 +15,25 @@ def display_db_connection_menu():
     --------------------
     Parameters
     --------------------
-    => To be filled by student
-    -> name (type): description
+    -> None
 
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
+    -> Create a header for the Database menu by calling the streamlit header function
+    -> Generate a text input box for database user by calling the streamlit text_input function and set the default value to the value retrieved from the environment variable
+    -> Generate a text input box for database password by calling the streamlit text_input function and set the default value to the value retrieved from the environment variable
+    -> Generate a text input box for database host by calling the streamlit text_input function and set the default value to the value retrieved from the environment variable
+    -> Generate a text input box for database name by calling the streamlit text_input function and set the default value to the value retrieved from the environment variable
+    -> Generate a text input box for database port by calling the streamlit text_input function and set the default value to the value retrieved from the environment variable
+    -> Create a dictionary with all the keys as the database user, password, host, name & port and set the values to their respective text inputs
+    -> Create a Connect button by calling the streamlit button function and on click, set the session states of the database user, password, host, name & port
+        -> If Connect button is clicked, call the connect_db() function
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
+    -> None
 
     """
     st.header("Database Connection Details")
@@ -54,20 +59,24 @@ def connect_db():
     --------------------
     Parameters
     --------------------
-    => To be filled by student
-    -> name (type): description
+    -> None
 
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
+    -> Instantiate a PostgresConnector() class by passing the database name, user, password, host and port from the streamlit session states
+    -> Open an active database connection by calling the open_connection() function
+    -> If connection object returned from open_connection() function is None:
+        -> Show an error message stating that the connection failed
+    -> Else if the status of the connection is 1:
+        -> Show a successful message stating that a database connection has been established
+        -> Set the session states for database connection status and PostgresConnector object
+    -> Close the active database connection by calling close_connection() function
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
+    -> None
 
     """
     postgresConnector = PostgresConnector(database=st.session_state['db_name'], 
@@ -93,20 +102,26 @@ def display_table_selection():
     --------------------
     Parameters
     --------------------
-    => To be filled by student
-    -> name (type): description
+    -> None
 
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
+    -> Open an active database connection by calling the open_connection() function for the PostgresConnector object stored in streamlit session states
+    -> Open an active cursor by calling the open_cursor() function for the PostgresConnector object stored in streamlit session states
+    -> Retrieve the list of tables from the database by calling the list_tables() function
+    -> Create a streamlit selectbox widget by passing the list of tables as the options for the selectbox
+    -> Retrieve the selected table and from it retrieve the selected schema and table
+    -> Set the streamlit session states for schema selected and table selected
+    -> Close the active cursor
+    -> Close the active database connection
+    -> Call the read_data() function to retrieve the Dataset() object for the selected schema and table
+    -> Set the session state for the Dataset() object
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
+    -> None
     """
     st.session_state['db'].open_connection()
     st.session_state['db'].open_cursor()
