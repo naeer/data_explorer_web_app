@@ -1,6 +1,10 @@
 import streamlit as st
+import pandas as pd
 
 from src.serie_numeric.logics import NumericColumn
+from src.dataframe.queries import get_numeric_tables_query
+
+# from src.config import set_session_states, display_session_state
 
 def display_numerics():
     """
@@ -28,7 +32,15 @@ def display_numerics():
     -> (type): description
 
     """
-    => To be filled by student
+    schema_name = st.session_state['schema_selected']
+    table_name = st.session_state['table_selected']
+    db = st.session_state['db']
+    db.open_cursor()
+    columns = db.run_query(get_numeric_tables_query(schema_name, table_name))[0]
+    db.close_cursor()
+    for idx, column in enumerate(columns):
+        with st.expander(f"{idx+1}. column: {column}"):
+            display_numeric(column, idx)
 
 def display_numeric(col_name, i):
     """
@@ -56,4 +68,20 @@ def display_numeric(col_name, i):
     -> (type): description
 
     """
-    => To be filled by student
+    schema_name = st.session_state['schema_selected']
+    table_name = st.session_state['table_selected']
+    db = st.session_state['db']
+    NC = NumericColumn(schema_name, table_name, col_name, db)
+    NC.set_data()
+
+    if not NC.is_serie_none():
+        st.table(data=NC.get_summary_df(col_name))
+        ### test code
+        # st.altair_chart(Data.barchart, use_container_width=True)
+        st.altair_chart(NC.histogram, use_container_width=True)
+        ### end test code
+    
+    else:
+        st.write('No data in table')
+
+    

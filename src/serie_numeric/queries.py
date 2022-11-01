@@ -24,7 +24,10 @@ def get_negative_number_query(schema_name, table_name, col_name):
     -> (type): description
 
     """
-    => To be filled by student
+    query = f"""select count({col_name}) 
+                from {schema_name}.{table_name} 
+                where {col_name} < 0"""
+    return query
 
 def get_std_query(schema_name, table_name, col_name):
     """
@@ -52,7 +55,8 @@ def get_std_query(schema_name, table_name, col_name):
     -> (type): description
 
     """
-    => To be filled by student
+    query = f"""select stddev({col_name}) from {schema_name}.{table_name}"""
+    return query
 
 def get_unique_query(schema_name, table_name, col_name):
     """
@@ -80,4 +84,6 @@ def get_unique_query(schema_name, table_name, col_name):
     -> (type): description
 
     """
-    => To be filled by student
+    query = f"""select count(distinct {col_name}) 
+                from {schema_name}.{table_name}"""
+    return query
