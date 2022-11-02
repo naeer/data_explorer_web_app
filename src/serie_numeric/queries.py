@@ -8,7 +8,6 @@ def get_negative_number_query(schema_name, table_name, col_name):
     --------------------
     Parameters
     --------------------
-    => To be filled by student
     -> name (type): description
 
     --------------------
