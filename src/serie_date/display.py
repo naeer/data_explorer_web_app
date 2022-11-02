@@ -9,25 +9,24 @@ def display_dates():
     --------------------
     Description
     --------------------
-    -> display_dates (function): Function that displays all the relevant information for every datetime column of a table
+    display_dates (function): Function that displays all the relevant information for every datetime column of a table
 
     --------------------
     Parameters
     --------------------
-    => To be filled by student
-    -> name (type): description
+    none
 
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
+    get required information from session state
+    get table data from instantiated Dataset class
+    extract date columns from table data, display column name and call display_date() frunction
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
+    none
 
     """
     schema_name = st.session_state['schema_selected']
@@ -46,26 +45,25 @@ def display_date(col_name, i):
     --------------------
     Description
     --------------------
-    -> display_date (function): Function that instantiates a DateColumn class from a dataframe column and displays all the relevant information for a single datetime column of a table
+    display_date (function): Function that instantiates a DateColumn class from a dataframe column and displays all the relevant information for a single datetime column of a table
 
     --------------------
     Parameters
     --------------------
-    => To be filled by student
-    -> name (type): description
+    col_name(str): name of selected column
+    i(int): index of selected column
 
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
+    get required information from session state
+    instantiats DateColumn class with acquired inforamtion and compute required inforamtion
+    display barchart and frequent values from the instantiated class with streamlit
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
-
+    none 
     """
     schema_name = st.session_state['schema_selected']
     table_name = st.session_state['table_selected']
