@@ -429,7 +429,7 @@ class DateColumn:
         value_c = pd.DataFrame()
         value_c['value'] = pd.to_datetime(counts.index)
         value_c['occurrence'] = counts.values
-        self.barchart = alt.Chart(value_c).mark_bar().encode(x='value', y='occurrence')
+        self.barchart = alt.Chart(value_c).mark_bar().encode(x='value', y='occurrence').interactive()
         self.db.close_cursor()
         self.db.close_connection()
 
