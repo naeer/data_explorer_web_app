@@ -8,19 +8,19 @@ def get_negative_number_query(schema_name, table_name, col_name):
     --------------------
     Parameters
     --------------------
-    -> name (type): description
+    -> schema_name (str): The name of the database schema
+    -> table_name (str): The name of the table containing the required column. 
+    -> col_name (str): The column being analysed 
 
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
+    -> Construct query using passed parameters
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
+    -> query (str): Constructed query used to determine the number of negative values for passed schema, table and column
 
     """
     query = f"""select count({col_name}) 
@@ -38,20 +38,19 @@ def get_std_query(schema_name, table_name, col_name):
     --------------------
     Parameters
     --------------------
-    => To be filled by student
-    -> name (type): description
+    -> schema_name (str): The name of the database schema
+    -> table_name (str): The name of the table containing the required column. 
+    -> col_name (str): The column being analysed 
 
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
+    -> Construct query using passed parameters
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
+    -> query (str): Constructed query used to determine the standard deviation of the values for passed schema, table and column
 
     """
     query = f"""select stddev({col_name}) from {schema_name}.{table_name}"""
@@ -67,20 +66,19 @@ def get_unique_query(schema_name, table_name, col_name):
     --------------------
     Parameters
     --------------------
-    => To be filled by student
-    -> name (type): description
+    -> schema_name (str): The name of the database schema
+    -> table_name (str): The name of the table containing the required column. 
+    -> col_name (str): The column being analysed 
 
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
+    -> Construct query using passed parameters
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
+    -> query (str): Constructed query used to determine the the number of unique values for passed schema, table and column
 
     """
     query = f"""select count(distinct {col_name}) 
