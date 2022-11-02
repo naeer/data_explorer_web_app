@@ -1,6 +1,6 @@
 version: “3”
 services:
-  app_name:
+  database_explorer_app:
     build: .
     volumes:
        - .:/app
@@ -13,9 +13,9 @@ services:
     ports:
        - "8501:8501"
     depends_on:
-       - db_name
+       - postgres
     command: python -m streamlit run app/streamlit_app.py   
-  db_name:
+  postgres:
     image: postgres:latest
     environment:
        - POSTGRES_HOST=hh-pgsql-public.ebi.ac.uk
