@@ -27,7 +27,7 @@ class Dataset:
     -> text_cols (list): List of columns of text type (optional)
     -> date_cols (list): List of columns of datetime type (optional)
     """
-    def __init__(self, schema_name=None, table_name=None, db=PostgresConnector(), df=pd.DataFrame()):
+    def __init__(self, schema_name=None, table_name=None, db=None, df=pd.DataFrame()):
         self.schema_name = schema_name
         self.table_name = table_name
         self.db = db
@@ -45,25 +45,25 @@ class Dataset:
         --------------------
         Description
         --------------------
-        -> set_data (method): Class method that computes all requested information from self.df to be displayed in the Overall section of Streamlit app
+        set_data (method): Class method that computes all requested information from self.df to be displayed in the Overall section of Streamlit app
 
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        open connection and cursor to the database
+        extract content of selected Postgres table and load into class attribute as pandas dataframe
+        close cursor and connection to the database
+        call class fucntions to compute table attributes after checking the dataframe is not empty
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        none
 
         """
         self.db.open_connection()
@@ -72,67 +72,60 @@ class Dataset:
         self.db.close_cursor()
         self.db.close_connection()
 
-        self.is_df_none()
-        self.set_dimensions()
-        self.set_duplicates()
-        self.set_missing()
-
-        self.set_numeric_columns()
-        # self.set_text_columns()
-        # self.set_date_columns()
+        if (not self.is_df_none()):
+            self.set_dimensions()
+            self.set_duplicates()
+            self.set_missing()
+            self.set_numeric_columns()
+            self.set_text_columns()
+            self.set_date_columns()
 
     def is_df_none(self):
         """
         --------------------
         Description
         --------------------
-        -> is_df_none (method): Class method that checks if self.df is empty or none
+        is_df_none (method): Class method that checks if self.df is empty or none
 
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        return boolean value indicating if the dataframe is empty
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        Boolean value
 
         """
-        return (self.df == None) | self.df.empty
+        return self.df.empty
 
     def set_dimensions(self):
         """
         --------------------
         Description
         --------------------
-        -> set_dimensions (method): Class method that computes the dimensions (number of columns and rows) of self.df and store them as attributes (self.n_rows, self.n_cols)
+        set_dimensions (method): Class method that computes the dimensions (number of columns and rows) of self.df and store them as attributes (self.n_rows, self.n_cols)
 
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        self: Reference to the current instance of the classtion
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        save relevant dataframe shape into attributes representing number of columns and rows of the dataframe
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        none
 
         """
         self.n_rows = self.df.shape[0]
@@ -143,25 +136,22 @@ class Dataset:
         --------------------
         Description
         --------------------
-        -> set_duplicates (method): Class method that computes the number of duplicated of self.df and store it as attribute (self.n_duplicates)
+        set_duplicates (method): Class method that computes the number of duplicated of self.df and store it as attribute (self.n_duplicates)
 
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        save the number of duplicated rows in the class's dataframe to the class attribute
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        none
 
         """
         self.n_duplicates = self.df.duplicated().sum()
@@ -171,25 +161,22 @@ class Dataset:
         --------------------
         Description
         --------------------
-        -> set_missing (method): Class method that computes the number of missing values of self.df and store it as attribute (self.n_missing)
+        set_missing (method): Class method that computes the number of missing values of self.df and store it as attribute (self.n_missing)
 
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        save the number of missing rows in the class's dataframe to corresponding class attribute
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        none
 
         """
         self.n_missing = self.df.isna().sum().sum()
@@ -199,35 +186,37 @@ class Dataset:
         --------------------
         Description
         --------------------
-        -> set_numeric_columns (method): Class method that extract the list of numeric columns from a table using a SQL query (from get_numeric_tables_query()),
+        set_numeric_columns (method): Class method that extract the list of numeric columns from a table using a SQL query (from get_numeric_tables_query()),
         store it as attribute (self.num_cols) and then convert the relevant columns of self.df accordingly.
 
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        self: Reference to the current instance of the class
+
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
-
+        open connection and cursor to the database
+        using existing sql query to extract numeric columns of the Postgres table
+        transform class's dataframe's columns based on extracted numeric columns after checking the dataframe is not empty
+        close connection and cursor to the database
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        none
 
         """
         self.db.open_connection()
         self.db.open_cursor()
-        self.num_cols = list(self.db.run_query(get_numeric_tables_query(self.schema_name, self.table_name))[0])
-        for column in self.num_cols:
-            for col in self.df.columns:
-                if (col == column):
-                    self.df[col] = pd.to_numeric(self.df[col])
+        result = self.db.run_query(get_numeric_tables_query(self.schema_name, self.table_name))
+        if (not result.empty):
+            self.num_cols = list(result[0])
+            for column in self.num_cols:
+                for col in self.df.columns:
+                    if (col == column):
+                        self.df[col] = pd.to_numeric(self.df[col])
         self.db.close_cursor()
         self.db.close_connection()
 
@@ -236,35 +225,36 @@ class Dataset:
         --------------------
         Description
         --------------------
-        -> set_text_columns (method): Class method that extract the list of text columns from a table using a SQL query (from get_numeric_tables_query()),
+        set_text_columns (method): Class method that extract the list of text columns from a table using a SQL query (from get_numeric_tables_query()),
         store it as attribute (self.text_cols) and then convert the relevant columns of self.df accordingly.
 
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        self: Reference to the current instance of the class
+
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
-
+        open connection and cursor to the database
+        using existing sql query to extract text columns of the Postgres table
+        transform class's dataframe's columns based on extracted text columns after checking the dataframe is not empty
+        close connection and cursor to the database
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
-
+        none
         """
         self.db.open_connection()
         self.db.open_cursor()
-        self.text_cols = list(self.db.run_query(get_text_tables_query(self.schema_name, self.table_name))[0])
-        for column in self.text_cols:
-            for col in self.df.columns:
-                if (col == column):
-                    self.df[col] = self.df[col].astype(str)
+        result = self.db.run_query(get_text_tables_query(self.schema_name, self.table_name))
+        if (not result.empty):
+            self.text_cols = list(result[0])
+            for column in self.text_cols:
+                for col in self.df.columns:
+                    if (col == column):
+                        self.df[col].apply(lambda v: str(v) if not pd.isnull(v) else None)
         self.db.close_cursor()
         self.db.close_connection()
 
@@ -273,35 +263,37 @@ class Dataset:
         --------------------
         Description
         --------------------
-        -> set_date_columns (method): Class method that extract the list of datetime columns from a table using a SQL query (from get_numeric_tables_query()),
+        set_date_columns (method): Class method that extract the list of datetime columns from a table using a SQL query (from get_numeric_tables_query()),
         store it as attribute (self.date_cols) and then convert the relevant columns of self.df accordingly.
 
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        self: Reference to the current instance of the class
+
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
-
+        open connection and cursor to the database
+        using existing sql query to extract date columns of the Postgres table
+        transform class's dataframe's columns based on extracted datte columns after checking the dataframe is not empty
+        close connection and cursor to the database
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        none
 
         """
         self.db.open_connection()
         self.db.open_cursor()
-        self.date_cols = list(self.db.run_query(get_date_tables_query(self.schema_name, self.table_name))[0])
-        for column in self.date_cols:
-            for col in self.df.columns:
-                if (col == column):
-                    self.df[col] = pd.to_datetime(self.df[col])
+        result = self.db.run_query(get_date_tables_query(self.schema_name, self.table_name))
+        if (not result.empty):
+            self.date_cols = list(result[0])
+            for column in self.date_cols:
+                for col in self.df.columns:
+                    if (col == column):
+                        self.df[col] = pd.to_datetime(self.df[col])
         self.db.close_cursor()
         self.db.close_connection()
 
@@ -310,25 +302,23 @@ class Dataset:
         --------------------
         Description
         --------------------
-        -> get_head (method): Class method that computes the first rows of self.df according to the provided number of rows specified as parameter (default: 5)
+        get_head (method): Class method that computes the first rows of self.df according to the provided number of rows specified as parameter (default: 5)
 
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        self: Reference to the current instance of the class
+        n(int): control the number of rows to be displayed
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        show the top n rows of the class's dataframe
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        pandas dataframe
 
         """
         return self.df.head(n)
@@ -338,25 +328,23 @@ class Dataset:
         --------------------
         Description
         --------------------
-        -> get_tail (method): Class method that computes the last rows of self.df according to the provided number of rows specified as parameter (default: 5)
+        get_tail (method): Class method that computes the last rows of self.df according to the provided number of rows specified as parameter (default: 5)
 
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        self: Reference to the current instance of the class
+        n(int): control the number of rows to be displayed
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        show the bottom n rows of the class's dataframe
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        pandas dataframe
 
         """
         return self.df.tail(n)
@@ -366,25 +354,23 @@ class Dataset:
         --------------------
         Description
         --------------------
-        -> get_sample (method): Class method that computes a random sample of rows of self.df according to the provided number of rows specified as parameter (default: 5)
+        get_sample (method): Class method that computes a random sample of rows of self.df according to the provided number of rows specified as parameter (default: 5)
 
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        self: Reference to the current instance of the class
+        n(int): control the number of rows to be displayed
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        show random n rows of the class's dataframe
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        pandas dataframe
 
         """
         return self.df.sample(n)
@@ -394,25 +380,23 @@ class Dataset:
         --------------------
         Description
         --------------------
-        -> get_summary_df (method): Class method that formats all requested information from self.df to be displayed in the Overall section of Streamlit app as a Pandas dataframe with 2 columns: Description and Value
+        get_summary_df (method): Class method that formats all requested information from self.df to be displayed in the Overall section of Streamlit app as a Pandas dataframe with 2 columns: Description and Value
 
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        setup an empty pandas DataFrame
+        set specified columns and values from computed attributes of the class's dataframe
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        pandas dataframe
 
         """
         summary = pd.DataFrame()
@@ -421,6 +405,31 @@ class Dataset:
         return summary
 
     def get_schema(self):
+        """
+        --------------------
+        Description
+        --------------------
+        get_schema (method): Class method that formats table schema information for selected Postgres table
+
+        --------------------
+        Parameters
+        --------------------
+        self: Reference to the current instance of the class
+
+
+        --------------------
+        Pseudo-Code
+        --------------------
+        open connection and cursor to the database
+        get table schema information for classls selected table from existing sql query
+        close connection and cursor to the database
+
+        --------------------
+        Returns
+        --------------------
+        pandas dataframe
+
+        """
         self.db.open_connection()
         self.db.open_cursor()
         schema = self.db.get_table_schema(self.schema_name, self.table_name)
