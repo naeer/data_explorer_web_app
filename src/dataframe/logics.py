@@ -293,7 +293,7 @@ class Dataset:
             for column in self.date_cols:
                 for col in self.df.columns:
                     if (col == column):
-                        self.df[col] = pd.to_datetime(self.df[col])
+                        self.df[col] = pd.to_datetime(self.df[col], utc=True)
         self.db.close_cursor()
         self.db.close_connection()
 
