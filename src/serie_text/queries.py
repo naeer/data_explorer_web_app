@@ -1,13 +1,4 @@
-def get_missing_query(schema_name, table_name, col_name):
-    """
-    --------------------
-    Description
-    --------------------
-    -> get_missing_query (method): Function that returns the query used for computing the number of missing values of a column from a Postgres table
-"""
-query = f"select count({col_name}) from {schema_name}.{table_name} where {col_name} is NULL"
- 
-return query
+import statistics
 
 def get_mode_query(schema_name, table_name, col_name):
     """
@@ -16,9 +7,8 @@ def get_mode_query(schema_name, table_name, col_name):
     --------------------
     -> get_mode_query (method): Function that returns the query used for computing the mode value of a column from a Postgres table
 """
- query = f"SELECT round(PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY {col_name}) ::numeric, 2) median_unit_price FROM {schema_name}.{table_name}"
- 
- return query
+    query = f"select mode() within group (order by {col_name}) from {schema_name}.{table_name}"
+    return query
 
 def get_alpha_query(schema_name, table_name, col_name):
     """
@@ -53,7 +43,7 @@ def get_lowercase(schema_name, table_name, col_name):
     -> get_lowercase (method): Function that returns the query used for computing the number of times a serie has only lowercase characters
 
 """
-    query = f"SELECT count(*) FROM {schema_name}.{table_name} where lower({col_name})" 
+    query = f"SELECT count(*) FROM {schema_name}.{table_name} where {col_name} ~ '[[:lower:]]'" 
 
     return query
 
@@ -65,7 +55,7 @@ def get_uppercase(schema_name, table_name, col_name):
     -> get_uppercase (method): Function that returns the query used for computing the number of times a serie has only uppercase characters
 
 """
-    query = f"SELECT count(*) FROM {schema_name}.{table_name} where upper({col_name})" 
+    query = f"SELECT count(*) FROM {schema_name}.{table_name} where {col_name} ~ '[[:upper:]]'" 
 
     return query
 
@@ -80,3 +70,14 @@ def get_digit(schema_name, table_name, col_name):
     query = f"SELECT count(*) FROM {schema_name}.{table_name} where {col_name} ~ '[[:digit:]]'" 
 
     return query
+
+def get_missing_query(schema_name, table_name, col_name):
+    """
+    --------------------
+    Description
+    --------------------
+    -> get_missing_query (method): Function that returns the query used for computing the number of missing values of a column from a Postgres table
+"""
+    query = f"SELECT count(*) FROM {schema_name}.{table_name} where {col_name}  is NULL"
+
+    return query 
