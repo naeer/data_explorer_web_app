@@ -7,25 +7,23 @@ def read_data():
     --------------------
     Description
     --------------------
-    -> read_data (function): Function that loads the content of the Postgres table selected, extract its schema information and instantiate a Dataset class accordingly
+    read_data (function): Function that loads the content of the Postgres table selected, extract its schema information and instantiate a Dataset class accordingly
 
     --------------------
     Parameters
     --------------------
-    => To be filled by student
-    -> name (type): description
+    none
 
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
+    using database connection status to get relevant information to instantiate a Dataset class
+    get relevant data and informtiaon fo the Dataset class
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
+    instantiated Dataset class
 
     """
     schema_name = st.session_state['schema_selected']
@@ -40,25 +38,23 @@ def display_overall():
     --------------------
     Description
     --------------------
-    -> display_overall (function): Function that displays all the information on the Overall section of the streamlit app
+    display_overall (function): Function that displays all the information on the Overall section of the streamlit app
 
     --------------------
     Parameters
     --------------------
-    => To be filled by student
-    -> name (type): description
+    none
 
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
+    get data from session session state
+    display overll and schema information for selected table
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
+    none
 
     """
     Data = st.session_state['data']
@@ -72,25 +68,24 @@ def display_dataframes():
     --------------------
     Description
     --------------------
-    -> display_dataframes (function): Function that displays all the information on the Explore section of the streamlit app
+    display_dataframes (function): Function that displays all the information on the Explore section of the streamlit app
 
     --------------------
     Parameters
     --------------------
-    => To be filled by student
-    -> name (type): description
+    none
 
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
+    get data from session session state
+    setup slider and radio selection with streamlit
+    display relevant information of table data based on user choice
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
+    none
 
     """
     Data = st.session_state['data']
