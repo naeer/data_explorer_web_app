@@ -4,6 +4,8 @@ import altair as alt
 
 from src.database.logics import PostgresConnector
 from src.serie_numeric.queries import get_negative_number_query, get_std_query, get_unique_query
+from src.serie_date.queries import get_column_query
+
 
 class NumericColumn:
     """
@@ -32,8 +34,24 @@ class NumericColumn:
     -> histogram (int): Altair histogram displaying the count for each bin value of a serie (optional)
     -> frequent (int): Datframe containing the most frequest value of a serie (optional)
 
-    """
-    => To be filled by student
+    """    
+    def __init__(self, schema_name=None, table_name=None, column_name=None, db=PostgresConnector(), ds=pd.Series()):
+        self.schema_name = schema_name
+        self.table_name = table_name
+        self.column_name = column_name
+        self.db = db
+        self.serie = ds
+        self.n_unique = None
+        self.n_missing = None
+        self.col_mean = None
+        self.col_std = None
+        self.col_min = None
+        self.col_max = None
+        self.col_median = None
+        self.n_zeros = None
+        self.n_negatives = None
+        self.histogram = None
+        self.frequent = None
 
     def set_data(self):
         """
@@ -45,23 +63,41 @@ class NumericColumn:
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        -> self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        -> open connection and cursor to the database
+        -> extract content of selected Postgres table's column and load into class attribute as pandas series
+        -> close cursor and connection to the database
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        -> None
 
         """
-        => To be filled by student
+        # self.db.open_connection()
+        self.db.open_cursor()
+        df = self.db.run_query(get_column_query(self.schema_name, self.table_name, self.column_name))
+        if not df.empty:
+            self.serie = df[0].squeeze()
+        self.db.close_cursor()
+        # self.db.close_connection()
+
+        if (not self.is_serie_none()):
+            self.set_unique()
+            self.set_missing()
+            self.set_mean()
+            self.set_std()
+            self.set_min()
+            self.set_max()
+            self.set_median()
+            self.set_zeros()
+            self.set_negatives()
+            self.set_histogram()
+            self.set_frequent()
 
     def is_serie_none(self):
         """
@@ -73,23 +109,20 @@ class NumericColumn:
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        -> self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        -> Returns a boolean value indicating whether the Pandas series is empty or none
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        -> (boolean): True if series is empty
 
         """
-        => To be filled by student
+        return self.serie.empty
 
     def set_unique(self):
         """
@@ -101,23 +134,26 @@ class NumericColumn:
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        -> self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        -> Open a connection and a cursor for the passed database
+        -> Retreive the sql query to extract the number of unique values of the selected column of the Postgres table
+        -> Pass the result to corresponding class attribute
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        -> None
 
         """
-        => To be filled by student
+        # self.db.open_connection() 
+        self.db.open_cursor()
+        self.n_unique = self.db.run_query(get_unique_query(self.schema_name, self.table_name, self.column_name))[0][0]
+        self.db.close_cursor()
+        # self.db.close_connection()
 
     def set_missing(self):
         """
@@ -129,23 +165,20 @@ class NumericColumn:
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        -> self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        -> Use Pandas series function to set the number of missing values in the selected column of the Postgres table
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        -> None
 
         """
-        => To be filled by student
+        self.n_missing = self.serie.isna().sum()
 
     def set_zeros(self):
         """
@@ -157,23 +190,20 @@ class NumericColumn:
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        -> self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        -> Use Pandas series function to set the number of zero values in the selected column of the Postgres table
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        -> None
 
         """
-        => To be filled by student
+        self.n_zeros = self.serie.isin([0]).sum()
 
     def set_negatives(self):
         """
@@ -185,24 +215,27 @@ class NumericColumn:
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        -> self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        -> Open a connection and a cursor for the passed database
+        -> Retreive the sql query to extract the number of negative values of the selected column of the Postgres table
+        -> Pass the result to corresponding class attribute
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        -> None
 
         """
-        => To be filled by student
-
+        # self.db.open_connection() 
+        self.db.open_cursor()
+        self.n_negatives = self.db.run_query(get_negative_number_query(self.schema_name, self.table_name, self.column_name))[0][0]
+        self.db.close_cursor()
+        # self.db.close_connection()
+        
     def set_mean(self):
         """
         --------------------
@@ -213,23 +246,20 @@ class NumericColumn:
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        -> self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        -> Use Pandas series function to set the mean of the values in the selected column of the Postgres table
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        -> None
 
         """
-        => To be filled by student
+        self.col_mean = self.serie.mean() 
 
     def set_std(self):
         """
@@ -241,23 +271,26 @@ class NumericColumn:
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        -> self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        -> Open a connection and a cursor for the passed database
+        -> Retreive the sql query to extract the standard deviation of the values of the selected column of the Postgres table
+        -> Pass the result to corresponding class attribute
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        -> None
 
         """
-        => To be filled by student
+        # self.db.open_connection() 
+        self.db.open_cursor()
+        self.col_std = self.db.run_query(get_std_query(self.schema_name, self.table_name, self.column_name))[0][0]
+        self.db.close_cursor()
+        # self.db.close_connection()
     
     def set_min(self):
         """
@@ -269,23 +302,20 @@ class NumericColumn:
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        -> self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        -> Use Pandas series function to set the minimum of the values in the selected column of the Postgres table
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        -> None
 
         """
-        => To be filled by student
+        self.col_min = self.serie.min()
 
     def set_max(self):
         """
@@ -297,23 +327,20 @@ class NumericColumn:
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        -> self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        -> Use Pandas series function to set the maximum of the values in the selected column of the Postgres table
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        -> None
 
         """
-        => To be filled by student
+        self.col_max = self.serie.max()
 
     def set_median(self):
         """
@@ -325,23 +352,20 @@ class NumericColumn:
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        -> self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        -> Use Pandas series function to set the median of the values in the selected column of the Postgres table
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        -> None
 
         """
-        => To be filled by student
+        self.col_median = self.serie.median()
 
     def set_histogram(self):
         """
@@ -353,23 +377,34 @@ class NumericColumn:
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        -> self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        -> Open a database connection and cursor 
+        -> Retreive the values counts from the Pandas series and convert to a Pandas dataframe
+        -> Create a Pandas dataframe and load values and value count
+        -> Create an Altair barchart using the dataframe
+        -> Store barchart in the corresponding class attribute
+        -> Close the cursor and connection to the database
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        -> None
 
         """
-        => To be filled by student
+        # self.db.open_connection()
+        self.db.open_cursor()
+        counts = self.serie.value_counts().to_frame()
+        value_count = pd.DataFrame()
+        value_count['id'] = pd.to_numeric(counts.index)
+        value_count['Count of Records'] = counts.values
+        self.histogram = alt.Chart(value_count).mark_bar().encode(alt.X("id", bin=alt.Bin(maxbins=50)), y='Count of Records').interactive()
+        self.db.close_cursor()
+        # self.db.close_connection()
+
 
     def set_frequent(self, end=20):
         """
@@ -381,25 +416,37 @@ class NumericColumn:
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        -> self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        -> Open a database connection and cursor 
+        -> Retreive the top 20 values occurences from the Pandas series and convert to a Pandas dataframe
+        -> Calculate the percentages and retreive the top 20 percentage values from the Pandas series and convert to a Pandas dataframe
+        -> Create a Pandas dataframe and load values, occurences and percentages
+        -> Store dataframe in the corresponding class attribute
+        -> Close the cursor and connection to the database
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        -> None
 
         """
-        => To be filled by student
+        # self.db.open_connection()
+        self.db.open_cursor()
+        counts = self.serie.value_counts().to_frame().head(end)
+        percentages = round(self.serie.value_counts(normalize=True).to_frame().head(end), 4)
+        value_count = pd.DataFrame()
+        value_count['value'] = pd.to_numeric(counts.index)
+        value_count['occurrence'] = counts.values
+        value_count['percentage'] = percentages.values
+        self.frequent = value_count
+        self.db.close_cursor()
+        # self.db.close_connection()
 
-    def get_summary_df(self,):
+    def get_summary_df(self):
         """
         --------------------
         Description
@@ -409,20 +456,37 @@ class NumericColumn:
         --------------------
         Parameters
         --------------------
-        => To be filled by student
-        -> name (type): description
+        -> self: Reference to the current instance of the class
 
         --------------------
         Pseudo-Code
         --------------------
-        => To be filled by student
-        -> pseudo-code
+        -> Create an empty Pandas datframe
+        -> Add row descriptions and values of class attributes
 
         --------------------
         Returns
         --------------------
-        => To be filled by student
-        -> (type): description
+        -> summary(Pandas.dataframe): A dataset containing two columns which can be used in a streamlit table function  
 
         """
-        => To be filled by student
+        summary = pd.DataFrame()
+        summary['Description'] = ['Number of Unique Values', 
+                                  'Number of Rows with Missing Values', 
+                                  'Number of Rows with 0', 
+                                  'Number of Rows with Negative Values', 
+                                  'Average Value', 
+                                  'Standard Deviation Value', 
+                                  'Minimum Value', 
+                                  'Maximum Value', 
+                                  'Median Value',]
+        summary['Value'] = ['{:,.0f}'.format(self.n_unique), 
+                            '{:,.0f}'.format(self.n_missing), 
+                            '{:,.0f}'.format(self.n_zeros), 
+                            '{:,.0f}'.format(self.n_negatives), 
+                            '{:,.3f}'.format(self.col_mean),
+                            '{:,.3f}'.format(self.col_std), 
+                            '{:,.3f}'.format(self.col_min), 
+                            '{:,.3f}'.format(self.col_max), 
+                            '{:,.3f}'.format(self.col_median)]
+        return summary

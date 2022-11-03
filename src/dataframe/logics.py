@@ -77,7 +77,7 @@ class Dataset:
         self.set_duplicates()
         self.set_missing()
 
-        # self.set_numeric_columns()
+        self.set_numeric_columns()
         # self.set_text_columns()
         # self.set_date_columns()
 
