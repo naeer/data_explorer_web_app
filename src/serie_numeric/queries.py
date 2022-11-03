@@ -23,9 +23,7 @@ def get_negative_number_query(schema_name, table_name, col_name):
     -> query (str): Constructed query used to determine the number of negative values for passed schema, table and column
 
     """
-    query = f"""select count({col_name}) 
-                from {schema_name}.{table_name} 
-                where {col_name} < 0"""
+    query = f"select count({col_name}) from {schema_name}.{table_name} where {col_name} < 0"
     return query
 
 def get_std_query(schema_name, table_name, col_name):
@@ -81,6 +79,5 @@ def get_unique_query(schema_name, table_name, col_name):
     -> query (str): Constructed query used to determine the the number of unique values for passed schema, table and column
 
     """
-    query = f"""select count(distinct {col_name}) 
-                from {schema_name}.{table_name}"""
+    query = f"select count(distinct {col_name}) from {schema_name}.{table_name}"
     return query

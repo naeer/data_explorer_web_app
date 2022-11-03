@@ -4,8 +4,6 @@ import pandas as pd
 from src.serie_numeric.logics import NumericColumn
 from src.dataframe.queries import get_numeric_tables_query
 
-# from src.config import set_session_states, display_session_state
-
 def display_numerics():
     """
     --------------------

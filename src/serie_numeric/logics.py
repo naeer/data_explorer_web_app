@@ -289,7 +289,6 @@ class NumericColumn:
         # self.db.open_connection() 
         self.db.open_cursor()
         self.col_std = self.db.run_query(get_std_query(self.schema_name, self.table_name, self.column_name))[0][0]
-        # self.col_std = self.serie.std()
         self.db.close_cursor()
         # self.db.close_connection()
     
