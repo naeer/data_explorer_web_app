@@ -69,7 +69,8 @@ class PostgresConnector:
             database=self.database)
             return self.conn
         except OperationalError:
-            return None
+            self.conn = None
+            return self.conn
 
     def close_connection(self):
         """
@@ -94,7 +95,8 @@ class PostgresConnector:
         -> None
 
         """
-        self.conn.close()
+        if self.conn:
+            self.conn.close()
 
     def open_cursor(self):
         """
@@ -119,7 +121,10 @@ class PostgresConnector:
         -> None
 
         """
-        self.cursor = self.conn.cursor()
+        if self.conn:
+            self.cursor = self.conn.cursor()
+        else:
+            self.cursor = None
 
     def close_cursor(self):
         """
@@ -144,7 +149,8 @@ class PostgresConnector:
         -> None
 
         """
-        self.cursor.close()
+        if self.cursor:
+            self.cursor.close()
 
     def run_query(self, sql_query):
         """
@@ -173,10 +179,12 @@ class PostgresConnector:
         -> (pandas.core.frame.DataFrame): Returns the result of a SQL query as a Pandas dataframe
 
         """
-        self.cursor.execute(sql_query)
-        query_result = self.cursor.fetchall()
-        query_result_df = pd.DataFrame(query_result)
-        return query_result_df
+        if self.cursor and sql_query:
+            self.cursor.execute(sql_query)
+            query_result = self.cursor.fetchall()
+            query_result_df = pd.DataFrame(query_result)
+            return query_result_df
+        return None
         
     def list_tables(self):
         """
@@ -210,14 +218,16 @@ class PostgresConnector:
 
         """
         sql_query = get_tables_list_query()
-        self.cursor.execute(sql_query)
-        query_result = self.cursor.fetchall()
-        list_tables = []
-        for results in query_result:
-            result_after_split = results[0].split(".")
-            if result_after_split[0] not in self.excluded_schemas:
-                list_tables.append(results[0])
-        return list_tables
+        if self.cursor:
+            self.cursor.execute(sql_query)
+            query_result = self.cursor.fetchall()
+            list_tables = []
+            for results in query_result:
+                result_after_split = results[0].split(".")
+                if result_after_split[0] not in self.excluded_schemas:
+                    list_tables.append(results[0])
+            return list_tables
+        return None
 
     def load_table(self, schema_name, table_name):
         """
@@ -248,9 +258,11 @@ class PostgresConnector:
 
         """
         query = get_table_data_query(schema_name, table_name)
-        self.cursor.execute(query)
-        df = pd.DataFrame(self.cursor.fetchall(), columns=[desc[0] for desc in self.cursor.description])
-        return df
+        if self.cursor:
+            self.cursor.execute(query)
+            df = pd.DataFrame(self.cursor.fetchall(), columns=[desc[0] for desc in self.cursor.description])
+            return df
+        return None
 
     def get_table_schema(self, schema_name, table_name):
         """
@@ -281,6 +293,8 @@ class PostgresConnector:
 
         """
         query = get_table_schema_query(schema_name, table_name)
-        self.cursor.execute(query)
-        df = pd.DataFrame(self.cursor.fetchall(), columns=[desc[0] for desc in self.cursor.description])
-        return df
+        if self.cursor:
+            self.cursor.execute(query)
+            df = pd.DataFrame(self.cursor.fetchall(), columns=[desc[0] for desc in self.cursor.description])
+            return df
+        return None

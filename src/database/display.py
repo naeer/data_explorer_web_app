@@ -87,6 +87,7 @@ def connect_db():
     conn_object = postgresConnector.open_connection()
     if conn_object is None:
         st.error(f"connection to server at \"{st.session_state['db_host']}\", port {st.session_state['db_port']} failed: FATAL: password authentication failed for user \"{st.session_state['db_user']}\"")
+        st.stop()
     elif conn_object.status == 1:
         st.success('Connection to database established', icon="ℹ️")
         set_session_states(['db_status', 'db'], [conn_object.status, postgresConnector])
