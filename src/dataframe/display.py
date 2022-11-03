@@ -61,7 +61,7 @@ def display_overall():
     -> (type): description
 
     """
-    Data = read_data()
+    Data = st.session_state['data']
     st.header('Overall Information')
     st.table(data=Data.get_summary_df())
     st.header('Table Schema')
@@ -93,7 +93,7 @@ def display_dataframes():
     -> (type): description
 
     """
-    Data = read_data()
+    Data = st.session_state['data']
     nrow = st.slider('Select the number of rows to be displayed', 5, 50)
     logic = st.radio('Exploration Method', ('Head', 'Tail', 'Sample'))
     if logic == 'Head':

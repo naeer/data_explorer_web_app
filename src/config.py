@@ -10,20 +10,17 @@ def set_app_config():
     --------------------
     Parameters
     --------------------
-    => To be filled by student
-    -> name (type): description
+    -> None
 
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
+    -> Set the page config by passing the page title, icon, layout and the initial sidebar state
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
+    -> None
 
     """
     st.set_page_config(
@@ -43,23 +40,24 @@ def set_session_state(key, value):
     --------------------
     Parameters
     --------------------
-    => To be filled by student
-    -> name (type): description
+    -> key (str): Key of the session state
+    -> value (str): Value to be stored for that key of the session state
 
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
+    -> If the value for the key is None:
+        -> If the key is not already in session state, that is it has not been initialized:
+            -> Set the session state for that key to that value, which is None
+    -> Else:
+        -> Store the value to the key of the session state
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
+    -> None
 
     """
-    #=> To be filled by student
     if value is None:
         if key not in st.session_state:
             st.session_state[key] = value
@@ -78,18 +76,23 @@ def set_session_states(keys, value=None):
     --------------------
     => To be filled by student
     -> name (type): description
+    -> keys (list): List of keys of the session state
+    -> value (list): By default, the value is None, otherwise a list of values corresponding to the list of keys
 
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
+    -> If the value is None:
+        -> For each key in keys:
+            -> Store the value to the key of the session state
+    -> Else:
+        -> For all the keys:
+            -> Store the key-value pairs in the session state
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
+    -> None
 
     """
     #=> To be filled by student
@@ -110,23 +113,19 @@ def display_session_state():
     --------------------
     Parameters
     --------------------
-    => To be filled by student
-    -> name (type): description
+    -> None
 
     --------------------
     Pseudo-Code
     --------------------
-    => To be filled by student
-    -> pseudo-code
+    -> Display the session state by passing the session_state object to the streamlit write() function
 
     --------------------
     Returns
     --------------------
-    => To be filled by student
-    -> (type): description
+    -> None
 
     """
-    #=> To be filled by student
     st.write(st.session_state)
 
 
