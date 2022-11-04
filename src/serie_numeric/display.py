@@ -19,10 +19,10 @@ def display_numerics():
     --------------------
     Pseudo-Code
     --------------------
-    -> Define the required database information from the streamlit session state 
-    -> Retreive a list of all tables containing numeric fields    
-    -> Cycle through table list to display table name in streamlit expander container and display numerical information     
-    
+    -> Define the required database information from the streamlit session state
+    -> Retreive a list of all tables containing numeric fields
+    -> Cycle through table list to display table name in streamlit expander container and display numerical information
+
     --------------------
     Returns
     --------------------
@@ -32,14 +32,15 @@ def display_numerics():
     schema_name = st.session_state['schema_selected']
     table_name = st.session_state['table_selected']
     db = st.session_state['db']
-    # self.db.open_connection()
+    db.open_connection()
     db.open_cursor()
     columns = db.run_query(get_numeric_tables_query(schema_name, table_name))[0]
     db.close_cursor()
-    # self.db.close_connection()
-    for idx, column in enumerate(columns):
-        with st.expander(f"{idx+1}. column: {column}"):
-            display_numeric(column, idx)
+    db.close_connection()
+    if columns is not None:
+        for idx, column in enumerate(columns):
+            with st.expander(f"{idx+1}. column: {column}"):
+                display_numeric(column, idx)
 
 def display_numeric(col_name, i):
     """
