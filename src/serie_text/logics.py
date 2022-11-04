@@ -41,6 +41,7 @@ class TextColumn:
         self.db = db
         self.serie = pd.Series()
         self.n_unique = None
+        self.n_whitespace = None
         self.n_empty = None
         self.n_missing = None
         self.n_space = None
@@ -51,39 +52,40 @@ class TextColumn:
         self.barchart = None
         self.frequent = None
         self.n_mode = None
-    
+
     def set_data(self):
         """
         --------------------
         Description
         --------------------
-        -> set_data (method): Class method that computes all requested information from self.serie to be displayed in the Text section of Streamlit app 
+        -> set_data (method): Class method that computes all requested information from self.serie to be displayed in the Text section of Streamlit app
         """
-
+        self.db.open_connection()
         self.db.open_cursor()
         self.serie = self.db.run_query(get_column_query(self.schema_name, self.table_name, self.col_name))[0].squeeze()
         self.db.close_cursor()
+        self.db.close_connection()
 
-        self.is_serie_none()
-        self.set_unique()
-        self.set_missing()
-        self.set_empty()
-        self.set_mode()
-        self.set_whitespace()
-        self.set_lowercase()
-        self.set_uppercase()
-        self.set_alphabet()
-        self.set_digit()
-        self.set_barchart()
-        self.set_frequent()
-        self.get_summary_df()
+        if (not self.is_serie_none()):
+            self.set_unique()
+            self.set_missing()
+            self.set_empty()
+            self.set_mode()
+            self.set_whitespace()
+            self.set_lowercase()
+            self.set_uppercase()
+            self.set_alphabet()
+            self.set_digit()
+            self.set_barchart()
+            self.set_frequent()
+            self.get_summary_df()
 
     def is_serie_none(self):
         """
         --------------------
         Description
         --------------------
-        -> is_serie_none (method): Class method that checks if self.serie is empty or none 
+        -> is_serie_none (method): Class method that checks if self.serie is empty or none
 
         """
         return self.serie.empty
@@ -106,10 +108,11 @@ class TextColumn:
         -> set_missing (method): Class method that computes the number of missing value of a serie using a SQL query (get_missing_query())
 
         """
+        self.db.open_connection()
         self.db.open_cursor()
         self.n_missing = self.db.run_query(get_missing_query(self.schema_name, self.table_name, self.col_name))[0][0]
         self.db.close_cursor()
-
+        self.db.close_connection()
 
     def set_empty(self):
         """
@@ -129,10 +132,11 @@ class TextColumn:
         -> set_mode (method): Class method that computes the mode value of a serie using a SQL query (get_mode_query())
 
         """
+        self.db.open_connection()
         self.db.open_cursor()
         self.n_mode = self.db.run_query(get_mode_query(self.schema_name, self.table_name, self.col_name))[0][0]
         self.db.close_cursor()
-
+        self.db.close_connection()
 
     def set_whitespace(self):
         """
@@ -142,9 +146,11 @@ class TextColumn:
         -> set_whitespace (method): Class method that computes the number of times a serie has only space characters
 
         """
+        self.db.open_connection()
         self.db.open_cursor()
         self.n_whitespace = self.db.run_query(get_whitespace(self.schema_name, self.table_name, self.col_name))[0][0]
         self.db.close_cursor()
+        self.db.close_connection()
 
     def set_lowercase(self):
         """
@@ -154,9 +160,11 @@ class TextColumn:
         -> set_lowercase (method): Class method that computes the number of times a serie has only lowercase characters
 
         """
+        self.db.open_connection()
         self.db.open_cursor()
-        self.n_lowercase = self.db.run_query(get_lowercase(self.schema_name, self.table_name, self.col_name))[0][0]
+        self.n_lower = self.db.run_query(get_lowercase(self.schema_name, self.table_name, self.col_name))[0][0]
         self.db.close_cursor()
+        self.db.close_connection()
 
     def set_uppercase(self):
         """
@@ -166,10 +174,12 @@ class TextColumn:
         -> set_uppercase (method): Class method that computes the number of times a serie has only uppercase characters
 
         """
+        self.db.open_connection()
         self.db.open_cursor()
-        self.n_uppercase = self.db.run_query(get_uppercase(self.schema_name, self.table_name, self.col_name))[0][0]
+        self.n_upper = self.db.run_query(get_uppercase(self.schema_name, self.table_name, self.col_name))[0][0]
         self.db.close_cursor()
-    
+        self.db.close_connection()
+
     def set_alphabet(self):
         """
         --------------------
@@ -178,9 +188,11 @@ class TextColumn:
         -> set_alphabet (method): Class method that computes the number of times a serie has only alphabetical characters using a SQL query (get_alpha_query())
 
         """
+        self.db.open_connection()
         self.db.open_cursor()
-        self.n_alphabet = self.db.run_query(get_alpha_query(self.schema_name, self.table_name, self.col_name))[0][0]
+        self.n_alpha = self.db.run_query(get_alpha_query(self.schema_name, self.table_name, self.col_name))[0][0]
         self.db.close_cursor()
+        self.db.close_connection()
 
     def set_digit(self):
         """
@@ -190,11 +202,13 @@ class TextColumn:
         -> set_digit (method): Class method that computes the number of times a serie has only digit characters
 
         """
+        self.db.open_connection()
         self.db.open_cursor()
         self.n_digit = self.db.run_query(get_digit(self.schema_name, self.table_name, self.col_name))[0][0]
         self.db.close_cursor()
+        self.db.close_connection()
 
-    def set_barchart(self):  
+    def set_barchart(self):
         """
         --------------------
         Description
@@ -202,14 +216,15 @@ class TextColumn:
         -> set_barchart (method): Class method that computes the Altair barchart displaying the count for each value of a serie
 
         """
+        self.db.open_connection()
         self.db.open_cursor()
         counts = self.serie.value_counts().to_frame()
         value_c = pd.DataFrame()
         value_c['value'] = counts.index
         value_c['occurrence'] = counts.values
-        self.barchart = alt.Chart(value_c).mark_bar().encode(x='value', y='occurrence')
+        self.barchart = alt.Chart(value_c).mark_bar().encode(x='value', y='occurrence').interactive()
         self.db.close_cursor()
-
+        self.db.close_connection()
 
     def set_frequent(self, end=20):
         """
@@ -219,6 +234,7 @@ class TextColumn:
         -> set_frequent (method): Class method that computes the Dataframe containing the most frequest value of a serie
 
         """
+        self.db.open_connection()
         self.db.open_cursor()
         counts = self.serie.value_counts().to_frame().head(end)
         counts_perc = round(self.serie.value_counts(normalize=True).to_frame().head(end), 4)
@@ -228,7 +244,7 @@ class TextColumn:
         value_c['percentage'] = counts_perc.values
         self.frequent = value_c
         self.db.close_cursor()
-
+        self.db.close_connection()
 
     def get_summary_df(self):
         """
@@ -241,5 +257,5 @@ class TextColumn:
 
         summary = pd.DataFrame()
         summary['Description'] = ['Number of Unique Values', 'Number of Rows with Missing Values', 'Number of Empty values', 'Number of Whitespaces', 'Mode of Values','Number of lowercase', 'Number of uppercase', 'Number of Series with alphabetical characters', 'Number of Series with digit characters']
-        summary['Value'] = [str(self.n_unique), str(self.n_missing), str(self.n_empty), str(self.n_whitespace), str(self.n_mode), str(self.n_lowercase), str(self.n_uppercase), str(self.n_alphabet), str(self.n_digit)]
+        summary['Value'] = [str(self.n_unique), str(self.n_missing), str(self.n_empty), str(self.n_whitespace), str(self.n_mode), str(self.n_lower), str(self.n_upper), str(self.n_alpha), str(self.n_digit)]
         return summary
