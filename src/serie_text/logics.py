@@ -46,6 +46,7 @@ class TextColumn:
         self.n_space = None
         self.n_lower = None
         self.n_upper = None
+        self.n_whitespace = None #needs to be added
         self.n_alpha = None
         self.n_digit = None
         self.barchart = None

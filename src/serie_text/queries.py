@@ -18,7 +18,7 @@ def get_alpha_query(schema_name, table_name, col_name):
     -> get_alpha_query (method): Function that returns the query used for computing the number of times a column from a Postgres table has only alphabetical characters
 
 """
-    query = f"SELECT count(*) FROM {schema_name}.{table_name} where {col_name} ~ '[[:alpha:]]'" #this returns characters only with a space
+    query = f"SELECT count(*) FROM {schema_name}.{table_name} where {col_name} ~ '^[[:alpha:]]*$'" #this returns characters only with a space
 
     return query
 
@@ -31,7 +31,7 @@ def get_whitespace(schema_name, table_name, col_name):
     -> get_whitespace (method): Function that returns the query used for computing the number of times a serie has only space characters
 
 """
-    query = f"SELECT count(*) FROM {schema_name}.{table_name} where {col_name} ~ '[[:space:]]'" #this returns characters only with a space
+    query = f"SELECT count(*) FROM {schema_name}.{table_name} where {col_name} ~ '^[[:space:]]*$'" #this returns characters only with a space
 
     return query
 
@@ -43,7 +43,7 @@ def get_lowercase(schema_name, table_name, col_name):
     -> get_lowercase (method): Function that returns the query used for computing the number of times a serie has only lowercase characters
 
 """
-    query = f"SELECT count(*) FROM {schema_name}.{table_name} where {col_name} ~ '[[:lower:]]'" 
+    query = f"SELECT count(*) FROM {schema_name}.{table_name} where {col_name} ~ '^[[:lower:]]*$'" 
 
     return query
 
@@ -55,7 +55,7 @@ def get_uppercase(schema_name, table_name, col_name):
     -> get_uppercase (method): Function that returns the query used for computing the number of times a serie has only uppercase characters
 
 """
-    query = f"SELECT count(*) FROM {schema_name}.{table_name} where {col_name} ~ '[[:upper:]]'" 
+    query = f"SELECT count(*) FROM {schema_name}.{table_name} where {col_name} ~ '^[[:upper:]]*$'" 
 
     return query
 
@@ -67,7 +67,7 @@ def get_digit(schema_name, table_name, col_name):
     -> get_digit (method): Function that returns the query used for computing the number of times a serie has only digit characters
 
 """
-    query = f"SELECT count(*) FROM {schema_name}.{table_name} where {col_name} ~ '[[:digit:]]'" 
+    query = f"SELECT count(*) FROM {schema_name}.{table_name} where {col_name} ~ '^[[:digit:]]*$'" 
 
     return query
 
