@@ -78,13 +78,13 @@ class NumericColumn:
         -> None
 
         """
-        # self.db.open_connection()
+        self.db.open_connection()
         self.db.open_cursor()
         df = self.db.run_query(get_column_query(self.schema_name, self.table_name, self.column_name))
         if not df.empty:
             self.serie = df[0].squeeze()
         self.db.close_cursor()
-        # self.db.close_connection()
+        self.db.close_connection()
 
         if (not self.is_serie_none()):
             self.set_unique()
@@ -149,11 +149,11 @@ class NumericColumn:
         -> None
 
         """
-        # self.db.open_connection() 
+        self.db.open_connection() 
         self.db.open_cursor()
         self.n_unique = self.db.run_query(get_unique_query(self.schema_name, self.table_name, self.column_name))[0][0]
         self.db.close_cursor()
-        # self.db.close_connection()
+        self.db.close_connection()
 
     def set_missing(self):
         """
@@ -230,11 +230,11 @@ class NumericColumn:
         -> None
 
         """
-        # self.db.open_connection() 
+        self.db.open_connection() 
         self.db.open_cursor()
         self.n_negatives = self.db.run_query(get_negative_number_query(self.schema_name, self.table_name, self.column_name))[0][0]
         self.db.close_cursor()
-        # self.db.close_connection()
+        self.db.close_connection()
         
     def set_mean(self):
         """
@@ -286,11 +286,11 @@ class NumericColumn:
         -> None
 
         """
-        # self.db.open_connection() 
+        self.db.open_connection() 
         self.db.open_cursor()
         self.col_std = self.db.run_query(get_std_query(self.schema_name, self.table_name, self.column_name))[0][0]
         self.db.close_cursor()
-        # self.db.close_connection()
+        self.db.close_connection()
     
     def set_min(self):
         """
@@ -395,7 +395,7 @@ class NumericColumn:
         -> None
 
         """
-        # self.db.open_connection()
+        self.db.open_connection()
         self.db.open_cursor()
         counts = self.serie.value_counts().to_frame()
         value_count = pd.DataFrame()
@@ -403,7 +403,7 @@ class NumericColumn:
         value_count['Count of Records'] = counts.values
         self.histogram = alt.Chart(value_count).mark_bar().encode(alt.X("id", bin=alt.Bin(maxbins=50)), y='Count of Records').interactive()
         self.db.close_cursor()
-        # self.db.close_connection()
+        self.db.close_connection()
 
 
     def set_frequent(self, end=20):
@@ -434,7 +434,7 @@ class NumericColumn:
         -> None
 
         """
-        # self.db.open_connection()
+        self.db.open_connection()
         self.db.open_cursor()
         counts = self.serie.value_counts().to_frame().head(end)
         percentages = round(self.serie.value_counts(normalize=True).to_frame().head(end), 4)
@@ -444,7 +444,7 @@ class NumericColumn:
         value_count['percentage'] = percentages.values
         self.frequent = value_count
         self.db.close_cursor()
-        # self.db.close_connection()
+        self.db.close_connection()
 
     def get_summary_df(self):
         """

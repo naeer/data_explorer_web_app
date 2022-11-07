@@ -427,7 +427,7 @@ class DateColumn:
         self.db.open_cursor()
         counts = self.serie.value_counts().to_frame()
         value_c = pd.DataFrame()
-        value_c['value'] = pd.to_datetime(counts.index)
+        value_c['value'] = pd.to_datetime(counts.index, utc=True)
         value_c['occurrence'] = counts.values
         self.barchart = alt.Chart(value_c).mark_bar().encode(x='value', y='occurrence').interactive()
         self.db.close_cursor()
@@ -466,7 +466,7 @@ class DateColumn:
         counts = self.serie.value_counts().to_frame().head(end)
         counts_perc = round(self.serie.value_counts(normalize=True).to_frame().head(end), 4)
         value_c = pd.DataFrame()
-        value_c['value'] = pd.to_datetime(counts.index)
+        value_c['value'] = pd.to_datetime(counts.index, utc=True)
         value_c['occurrence'] = counts.values
         value_c['percentage'] = counts_perc.values
         self.frequent = value_c
