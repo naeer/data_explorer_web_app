@@ -34,8 +34,7 @@ def display_dates():
     Data_all = Dataset(schema_name, table_name, db=st.session_state['db'])
     Data_all.set_data()
     if (Data_all.date_cols != None):
-        date_cols = Data_all.date_cols
-        for idx, column in enumerate(date_cols):
+        for idx, column in enumerate(Data_all.date_cols):
             with st.expander(f"{idx+1}. column: {column}"):
                 display_date(column, idx)
 
@@ -63,7 +62,7 @@ def display_date(col_name, i):
     --------------------
     Returns
     --------------------
-    none 
+    none
     """
     schema_name = st.session_state['schema_selected']
     table_name = st.session_state['table_selected']
