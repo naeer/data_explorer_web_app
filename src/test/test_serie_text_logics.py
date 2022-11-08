@@ -107,11 +107,10 @@ class TestSerie(unittest.TestCase):
         text.set_data()
 
         actual = pd.DataFrame()
-        summary['Description'] = ['Number of Unique Values', 'Number of Rows with Missing Values', 'Number of Empty values', 'Number of Whitespaces', 'Mode of Values','Number of lowercase', 'Number of uppercase', 'Number of Series with alphabetical characters', 'Number of Series with digit characters']      
+        actual['Description'] = ['Number of Unique Values', 'Number of Rows with Missing Values', 'Number of Empty values', 'Number of Whitespaces', 'Mode of Values','Number of lowercase', 'Number of uppercase', 'Number of Series with alphabetical characters', 'Number of Series with digit characters']      
         actual['Value'] = [str(result_serie.nunique()), str(result_serie.isna().sum()), str(result_serie.isna().sum()), str(result_serie.space()), str(result_serie.mode()), str(result_serie.lower()), str(result_serie.upper()), str(result_serie.alpha()), str(result_serie.digit())]
-        return summary
 
-        pd.testing.assert_frame_equal(date.get_summary_df(), actual)
+        pd.testing.assert_frame_equal(text.get_summary_df(), actual)
 
 
 
