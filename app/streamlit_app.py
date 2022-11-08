@@ -8,7 +8,7 @@ from src.serie_text.display import display_texts
 from src.serie_date.display import display_dates
 
 
-set_session_states(['db', 'db_host', 'db_name', 'db_port', 'db_user', 'db_pass', 'db_status', 'db_infos_df', 'schema_selected', 'table_selected', 'data'])
+set_session_states(['db', 'db_host', 'db_name', 'db_port', 'db_user', 'db_pass', 'db_status', 'schema_selected', 'table_selected', 'data'])
 
 set_app_config()
 st.title("Database Explorer")
