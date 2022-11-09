@@ -30,6 +30,7 @@ class PostgresConnector:
         self.host = host
         self.port = port
         self.excluded_schemas = ['information_schema', 'pg_catalog']
+        self.cursor = None
     
     def open_connection(self):
         """
