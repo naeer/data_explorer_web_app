@@ -101,6 +101,9 @@ class TestDataFrame(unittest.TestCase):
         data = Dataset(schema_name, table_name, db=PostgresConnector(database='postgres', user='postgres', password='password', host='localhost', port='5432'))
         data.set_data()
 
+        data.df['birth_date'] = data.df['birth_date'].dt.tz_localize(None)
+        data.df['hire_date'] = data.df['hire_date'].dt.tz_localize(None)
+        
         result['birth_date'] = pd.to_datetime(result['birth_date'])
         result['hire_date'] = pd.to_datetime(result['hire_date'])
 
