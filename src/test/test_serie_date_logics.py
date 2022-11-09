@@ -61,6 +61,9 @@ class TestSerie(unittest.TestCase):
         counts_df['occurrence'] = counts.values
         counts_df['percentage'] = counts_perc.values
 
+        result_serie = result_serie.dt.tz_localize(None)
+        date.frequent.value = date.frequent.value.dt.tz_localize(None)
+        
         pd.testing.assert_series_equal(date.serie, result_serie)
         self.assertEqual(date.n_unique, result_serie.nunique())
         self.assertEqual(date.n_missing, result_serie.isna().sum())
