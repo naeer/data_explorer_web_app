@@ -35,6 +35,7 @@ The application was containerised with the help of docker for ease of deployment
 - streamlit - 1.13.0
 - pandas - 1.5.1
 - psycopg2-binary - 2.9.5
+- sqlalchemy - 1.4.42 (for unit tests)
 
 
 ## How to Run the Program
@@ -91,6 +92,43 @@ The project root directory contains the following folders and files:
 - *requirements.txt*: text file listing all the dependencies for this project
 - *Dockerfile*: file containing the code to assemble a Python image and install all the required packages for this project
 - *docker-compose.yml*: file containing the code to run a multi-container application consisting of two different services, namely Streamlit and Postgres
+
+## Unit tests
+#### Instructions to run unit tests for test_database_logics.py file
+Pre-requisites:
+- Create a local database on your machine:
+    -  Download a sql file from: https://drive.google.com/file/d/1xfUF79LxsYte9Wevce-Fhpw50uiS_0Jx/view that contains code to create the database and populate the tables
+    - Open dbeaver
+    - Create a new connection using PostgreSQL
+    - Put the following credentials while creating the connection:
+        - Host:localhost
+        - Database:postgres
+        - Password:[Putyourowndatabasepasswordthatyousetupwhileinstallingpostgres] 
+        - Port:5432
+    - Click on Test Connection
+    - Once the connection has been successful, run the downloaded sql file
+    - Check if the tables has been populated in the public schema
+- Once the database has been created, configure the database connection settings in test_database_logics.py file by updating the values in the following variables
+    ```python
+    db_name = "postgres"
+    db_host = "localhost"
+    db_user = "postgres"
+    db_password = "9142"
+    db_port = "5432"
+    ```
+- Execute the following command in the root directory of the project to run the unit tests 
+    ```shell
+    python -m src.test.test_database_logics
+    ```
+#### Instructions to run unit tests for all the queries files (test_database_queries, test_dataframe_queries, test_serie_date_queries, test_serie_numeric_queries, test_serie_text_queries):
+- Execute the following command in the root directory of the project to run the unit tests:
+    ```shell
+    python -m src.test.[filename]
+    ```
+    Example command for test_database_queries.py:
+    ```shell
+    python -m src.test.test_database_queries
+    ```
 
 ## Citations
 1. (2022). Streamlit: A faster way to build and share data apps. Streamlit. https://docs.streamlit.io
