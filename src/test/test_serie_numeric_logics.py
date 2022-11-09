@@ -7,7 +7,7 @@ from src.database.logics import PostgresConnector
 from src.serie_numeric.logics import NumericColumn
 
 def setup_local():
-    engine = db.create_engine("postgresql+psycopg2://postgres:admin@localhost:5432/postgres")
+    engine = db.create_engine("postgresql+psycopg2://postgres:password@localhost:5432/postgres")
     return engine
 
 def get_data_local(engine, table_name):
@@ -49,7 +49,7 @@ class TestSerie(unittest.TestCase):
         result = get_data_local(engine, table_name)
         result_serie = pd.Series(result['employee_id'])
 
-        numeric_data = NumericColumn(schema_name, table_name, col_name, db=PostgresConnector(database='postgres', user='postgres', password='admin', host='localhost', port='5432'))
+        numeric_data = NumericColumn(schema_name, table_name, col_name, db=PostgresConnector(database='postgres', user='postgres', password='password', host='localhost', port='5432'))
         numeric_data.set_data()
         numeric_data.serie = pd.Series(numeric_data.serie)
         numeric_data.serie.name = 'employee_id'
@@ -96,7 +96,7 @@ class TestSerie(unittest.TestCase):
         result = get_data_local(engine, table_name)
         result_serie = pd.to_numeric(result['employee_id'])
 
-        test_numeric_data = NumericColumn(schema_name, table_name, col_name, db=PostgresConnector(database='postgres', user='postgres', password='admin', host='localhost', port='5432'))
+        test_numeric_data = NumericColumn(schema_name, table_name, col_name, db=PostgresConnector(database='postgres', user='postgres', password='password', host='localhost', port='5432'))
         test_numeric_data.set_data()
 
         actual = pd.DataFrame()
