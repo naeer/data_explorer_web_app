@@ -48,11 +48,12 @@ class TestSerie(unittest.TestCase):
         engine = setup_local()
         result = get_data_local(engine, table_name)
         result_serie = pd.Series(result['last_name'])
+        apple = result_serie.mode()
 
-        text = TextColumn(schema_name, table_name, col_name, db=PostgresConnector(database='postgres', user='postgres', password='password', host='localhost', port='5432'))
-        text.set_data()
-        text.serie = pd.Series(text.serie)
-        text.serie.name = 'last_name'
+        text_data = TextColumn(schema_name, table_name, col_name, db=PostgresConnector(database='postgres', user='postgres', password='password', host='localhost', port='5432'))
+        text_data.set_data()
+        text_data.serie = pd.Series(text_data.serie)
+        text_data.serie.name = 'last_name'
 
         counts = result_serie.value_counts().to_frame()
         counts_perc = round(result_serie.value_counts(normalize=True).to_frame().head(20), 4)
@@ -61,17 +62,17 @@ class TestSerie(unittest.TestCase):
         counts_df['occurrence'] = counts.values
         counts_df['percentage'] = counts_perc.values
 
-        pd.testing.assert_series_equal(text.serie, result_serie)
-        self.assertEqual(text.n_unique, result_serie.nunique())
-        self.assertEqual(text.n_missing, result_serie.isna().sum())
-        self.assertEqual(text.n_mode, result_serie.mode())
-        self.assertEqual(text.n_whitespace, result_serie.whitespace)
-        self.assertEqual(text.n_lower, result_serie.lower)
-        self.assertEqual(text.n_upper, result_serie.upper)
-        self.assertEqual(text.n_alpha, result_serie.alpha)
-        self.assertEqual(text.n_empty, result_serie.empty)
-        self.assertEqual(text.n_digit, result_serie.digit)
-        pd.testing.assert_frame_equal(text.frequent, counts_df)
+        pd.testing.assert_series_equal(text_data.serie, result_serie)
+        self.assertEqual(text_data.n_unique, result_serie.nunique())
+        self.assertEqual(text_data.n_missing, result_serie.isna().sum())
+        self.assertEqual(text_data.n_mode, result_serie.mode()[0])
+        self.assertEqual(text_data.n_whitespace, sum(result_serie.str.isspace() == True))
+        self.assertEqual(text_data.n_lower, sum(result_serie.str.islower() == True))
+        self.assertEqual(text_data.n_upper, sum(result_serie.str.isupper() == True))
+        self.assertEqual(text_data.n_alpha, sum(result_serie.str.isalpha() == True))
+        self.assertEqual(text_data.n_empty, result_serie.isna().sum())
+        self.assertEqual(text_data.n_digit, sum(result_serie.str.isdigit() == True))
+        pd.testing.assert_frame_equal(text_data.frequent, counts_df)
 
 
     def test_empty(self):
@@ -101,18 +102,34 @@ class TestSerie(unittest.TestCase):
         col_name = 'last_name'
         engine = setup_local()
         result = get_data_local(engine, table_name)
-        result_serie = str(result['last_name'])
+        result_serie = pd.Series(result['last_name'])
 
-        text = TextColumn(schema_name, table_name, col_name, db=PostgresConnector(database='postgres', user='postgres', password='password', host='localhost', port='5432'))
-        text.set_data()
+        text_data = TextColumn(schema_name, table_name, col_name, db=PostgresConnector(database='postgres', user='postgres', password='password', host='localhost', port='5432'))
+        text_data.set_data()
 
         actual = pd.DataFrame()
-        actual['Description'] = ['Number of Unique Values', 'Number of Rows with Missing Values', 'Number of Empty values', 'Number of Whitespaces', 'Mode of Values','Number of lowercase', 'Number of uppercase', 'Number of Series with alphabetical characters', 'Number of Series with digit characters']      
-        actual['Value'] = [str(result_serie.nunique()), str(result_serie.isna().sum()), str(result_serie.isna().sum()), str(result_serie.space()), str(result_serie.mode()), str(result_serie.lower()), str(result_serie.upper()), str(result_serie.alpha()), str(result_serie.digit())]
+        actual['Description'] = ['Number of Unique Values', 
+                                    'Number of Rows with Missing Values', 
+                                    'Number of Empty values', 
+                                    'Number of Whitespaces', 
+                                    'Mode of Values',
+                                    'Number of lowercase', 
+                                    'Number of uppercase', 
+                                    'Number of Series with alphabetical characters', 
+                                    'Number of Series with digit characters']      
+        
+        actual['Value'] = [str(result_serie.nunique()), 
+                           str(result_serie.isna().sum()), 
+                           str(result_serie.isna().sum()),  
+                           str(sum(result_serie.str.isspace() == True)), 
+                           result_serie.mode()[0], 
+                           str(sum(result_serie.str.islower() == True)), 
+                           str(sum(result_serie.str.isupper() == True)), 
+                           str(sum(result_serie.str.isalpha() == True)),
+                           str(sum(result_serie.str.isdigit() == True))]
 
-        pd.testing.assert_frame_equal(text.get_summary_df(), actual)
 
-
+        pd.testing.assert_frame_equal(text_data.get_summary_df(), actual)
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
